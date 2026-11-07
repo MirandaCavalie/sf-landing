@@ -110,24 +110,7 @@ export default function Dashboard({
           </div>
         </header>
 
-        <section className="ticket p-6">
-          <h1 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
-            {week?.tagline ?? "Your SF landing plan"}
-          </h1>
-          <p className="mt-1 text-sm text-ink/60">
-            Landing {dayLabel(profile.arrival)} · {profile.stayLength} · {profile.budget.toLowerCase()} budget
-          </p>
-          {week && (
-            <ul className="mt-5 grid gap-2 sm:grid-cols-3">
-              {week.secrets.map((s, i) => (
-                <li key={i} className="flex gap-2 rounded-xl bg-[#fff4ef] p-3 text-sm leading-snug">
-                  <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-bridge" />
-                  {s}
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+        <Hero profile={profile} week={week} />
 
         <nav className="sticky top-0 z-10 -mx-4 mt-6 overflow-x-auto bg-[#f6f4f0]/90 px-4 py-2 backdrop-blur sm:mx-0 sm:px-0">
           <div className="inline-flex gap-1 rounded-full bg-black/5 p-1">
@@ -166,6 +149,119 @@ export default function Dashboard({
 
       <Chat context={context} variant="docked" />
     </div>
+  );
+}
+
+function todayLA() {
+  return new Date().toLocaleDateString("en-CA", { timeZone: "America/Los_Angeles" });
+}
+
+function daysBetween(a: string, b: string) {
+  return Math.round((new Date(`${b}T12:00:00Z`).getTime() - new Date(`${a}T12:00:00Z`).getTime()) / 86400000);
+}
+
+function Hero({ profile, week }: { profile: Profile; week?: Week }) {
+  const today = todayLA();
+  const until = daysBetween(today, profile.arrival);
+  const status =
+    until > 1 ? `Landing in ${until} days` : until === 1 ? "Landing tomorrow" : until === 0 ? "Landing today" : `Day ${1 - until} in SF`;
+
+  const items = week?.days.flatMap((d, di) => d.items.map((it) => ({ ...it, date: d.date, day: di + 1 }))) ?? [];
+  const now = new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "America/Los_Angeles" });
+  const next = items.find((it) => it.date > today || (it.date === today && it.end > now)) ?? items[0];
+  const count = (k: string) => items.filter((it) => it.kind === k).length;
+  const stats = [
+    { n: items.length, label: "plans" },
+    { n: count("coffee"), label: "coffee chats" },
+    { n: count("event"), label: "events" },
+    { n: count("work"), label: "work blocks" },
+  ];
+
+  const key = `sfl:todo:${profile.arrival}`;
+  const [done, setDone] = useState<number[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(key) ?? "[]");
+    } catch {
+      return [];
+    }
+  });
+  const toggle = (i: number) => {
+    const v = done.includes(i) ? done.filter((x) => x !== i) : [...done, i];
+    setDone(v);
+    try {
+      localStorage.setItem(key, JSON.stringify(v));
+    } catch {}
+  };
+
+  return (
+    <section className="grid gap-3 lg:grid-cols-[1.4fr_1fr]">
+      <div className="ticket p-6">
+        <p className="text-sm font-medium text-bridge-ink">{status}</p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Your first week in SF</h1>
+        <p className="mt-1 text-sm text-ink/55">
+          {dayLabel(profile.arrival)} · {profile.stayLength} · {profile.budget.toLowerCase()} budget
+        </p>
+        <div className="mt-5 grid grid-cols-4 gap-2">
+          {stats.map((s) => (
+            <div key={s.label} className="rounded-xl bg-black/[0.03] px-3 py-2.5">
+              <p className="text-2xl font-semibold tabular-nums">{s.n}</p>
+              <p className="text-xs text-ink/55">{s.label}</p>
+            </div>
+          ))}
+        </div>
+        {next && (
+          <div className="mt-4 flex items-center gap-3 rounded-xl bg-ink p-3.5 text-white">
+            <div className="shrink-0 text-center">
+              <p className="text-[11px] uppercase text-white/60">Day {next.day}</p>
+              <p className="text-sm font-semibold tabular-nums">{next.start}</p>
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs text-white/60">Next up</p>
+              <p className="truncate font-medium">{next.title}</p>
+              <p className="truncate text-xs text-white/60">{next.place}</p>
+            </div>
+            <a
+              href={mapsUrl(next.place)}
+              target="_blank"
+              rel="noreferrer"
+              className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium hover:bg-white/25"
+            >
+              <MapPin className="h-3.5 w-3.5" /> Go
+            </a>
+          </div>
+        )}
+      </div>
+
+      {week && (
+        <div className="ticket p-6">
+          <h2 className="font-semibold">Before you land</h2>
+          <p className="mt-0.5 text-xs text-ink/55">
+            {done.length}/{week.secrets.length} done
+          </p>
+          <ul className="mt-4 space-y-2">
+            {week.secrets.map((s, i) => (
+              <li key={i}>
+                <button
+                  onClick={() => toggle(i)}
+                  className={`flex w-full items-start gap-2.5 rounded-xl p-2.5 text-left text-sm transition hover:bg-black/[0.03] ${
+                    done.includes(i) ? "text-ink/40 line-through" : ""
+                  }`}
+                >
+                  <span
+                    className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
+                      done.includes(i) ? "border-bridge bg-bridge text-white" : "border-black/25"
+                    }`}
+                  >
+                    {done.includes(i) && <Check className="h-3 w-3" />}
+                  </span>
+                  {s}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
   );
 }
 
