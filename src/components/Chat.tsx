@@ -14,13 +14,14 @@ type Turn =
 type Connected = { google: boolean; linkedin: boolean; name?: string; image?: string };
 
 const STARTERS = [
-  "Where should I live for 1 month on a tight budget?",
-  "What tech events are happening in SF this week?",
-  "Find me Latino founders to grab coffee with",
-  "Write my X post: landing in SF next week",
+  "What tech events in SF should I go to the week I land?",
+  "Find me someone to grab coffee with on Day 2",
+  "Is my neighborhood safe at night? Where should I avoid?",
+  "Write my X post announcing I'm landing",
 ];
 
-export default function Chat({ context }: { context: string }) {
+export default function Chat({ context, variant = "floating" }: { context: string; variant?: "floating" | "docked" }) {
+  const docked = variant === "docked";
   const [open, setOpen] = useState(false);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
@@ -79,13 +80,21 @@ export default function Chat({ context }: { context: string }) {
     <>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full border-2 border-ink bg-bridge px-5 py-3 font-mono text-sm uppercase tracking-wider text-paper shadow-[4px_4px_0_var(--ink)] transition hover:-translate-y-0.5"
+        className={`${docked ? "lg:hidden " : ""}fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full border-2 border-ink bg-bridge px-5 py-3 font-mono text-sm uppercase tracking-wider text-paper shadow-[4px_4px_0_var(--ink)] transition hover:-translate-y-0.5`}
       >
         {open ? "✕ Close" : "✦ Ask your SF local"}
       </button>
 
-      {open && (
-        <div className="fixed inset-x-3 bottom-20 top-3 z-50 flex flex-col overflow-hidden border-2 border-ink bg-paper shadow-[8px_8px_0_var(--ink)] sm:inset-x-auto sm:right-5 sm:top-auto sm:h-[640px] sm:w-[420px]">
+      {(open || docked) && (
+        <div
+          className={`${
+            open
+              ? "fixed inset-x-3 bottom-20 top-3 z-50 flex shadow-[8px_8px_0_var(--ink)] sm:inset-x-auto sm:right-5 sm:top-auto sm:h-[640px] sm:w-[420px]"
+              : "hidden"
+          } flex-col overflow-hidden border-2 border-ink bg-paper ${
+            docked ? "lg:sticky lg:inset-auto lg:top-0 lg:z-auto lg:flex lg:h-screen lg:w-full lg:border-y-0 lg:border-r-0 lg:shadow-none" : ""
+          }`}
+        >
           {/* Header + connectors */}
           <div className="bg-ink px-4 py-3 text-paper">
             <div className="flex items-center justify-between">
@@ -110,8 +119,8 @@ export default function Chat({ context }: { context: string }) {
             {turns.length === 0 && (
               <div>
                 <p className="text-sm text-bay">
-                  {conn.name ? `Hey ${conn.name.split(" ")[0]}! ` : ""}I search our insider playbook and the live web, find people
-                  to meet, draft your messages and put plans on your calendar. Try:
+                  {conn.name ? `Hey ${conn.name.split(" ")[0]}! ` : ""}I know your plan. I search our insider playbook and the live web, find people to
+                  meet, draft your messages and put things on your calendar. Try:
                 </p>
                 <div className="mt-3 flex flex-col gap-2">
                   {STARTERS.map((s) => (
