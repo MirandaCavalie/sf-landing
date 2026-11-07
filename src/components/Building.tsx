@@ -55,8 +55,7 @@ export default function Building({ status }: { status: Record<string, Status> })
           );
         })}
       </section>
-      <p className="mt-8 font-mono text-[11px] uppercase tracking-widest text-bay">While you wait · local tip</p>
-      <p key={tip} className="mt-1 text-lg">
+      <p key={tip} className="mt-8 text-lg">
         🔑 {TIPS[tip]}
       </p>
     </main>

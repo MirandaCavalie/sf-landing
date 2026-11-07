@@ -12,8 +12,7 @@ export default function AuthGate() {
       </header>
       <section className="grid flex-1 items-center gap-10 pb-16 md:grid-cols-[1.1fr_1fr]">
         <div>
-          <p className="font-mono text-xs uppercase tracking-widest text-bay">Arrivals · San Francisco</p>
-          <h1 className="mt-3 font-display text-6xl uppercase leading-[0.9] sm:text-8xl">
+          <h1 className="font-display text-6xl uppercase leading-[0.9] sm:text-8xl">
             Land like
             <br />
             <span className="mt-2 inline-block bg-bridge px-2 pt-1 text-paper">a local.</span>

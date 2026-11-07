@@ -27,8 +27,7 @@ export default function Onboarding({ name, onSubmit }: { name: string; onSubmit:
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10 sm:px-8">
-      <p className="font-mono text-xs uppercase tracking-widest text-bay">Boarding pass · 30 seconds</p>
-      <h1 className="mt-2 font-display text-5xl uppercase leading-none sm:text-6xl">
+      <h1 className="font-display text-5xl uppercase leading-none sm:text-6xl">
         Hey {first}, <span className="text-bridge-ink">when do you land?</span>
       </h1>
 

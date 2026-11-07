@@ -65,12 +65,12 @@ export default function Dashboard({
 
         {/* Summary */}
         <section className="ticket ticket-notch p-5 sm:p-6">
-          <p className="font-mono text-[11px] uppercase tracking-widest text-bay">
-            {profile.name.split(" ")[0]} · lands {dayLabel(profile.arrival)} · {profile.stayLength} · {profile.budget} budget
-          </p>
-          <h1 className="mt-1 font-display text-3xl uppercase leading-tight sm:text-4xl">
+          <h1 className="font-display text-3xl uppercase leading-tight sm:text-4xl">
             {week?.tagline ?? "Your SF landing plan"}
           </h1>
+          <p className="mt-2 text-sm text-bay">
+            Landing {dayLabel(profile.arrival)} for {profile.stayLength}, {profile.budget.toLowerCase()} budget
+          </p>
           {week && (
             <ol className="mt-4 grid gap-2 sm:grid-cols-3">
               {week.secrets.map((s, i) => (
