@@ -27,12 +27,12 @@ export default function Onboarding({ name, onSubmit }: { name: string; onSubmit:
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10 sm:px-8">
-      <h1 className="font-display text-5xl uppercase leading-none sm:text-6xl">
+      <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
         Hey {first}, <span className="text-bridge-ink">when do you land?</span>
       </h1>
 
       <form
-        className="ticket ticket-notch mt-8 space-y-6 p-6"
+        className="ticket mt-8 space-y-6 p-6"
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit({
@@ -53,7 +53,7 @@ export default function Onboarding({ name, onSubmit }: { name: string; onSubmit:
             required
             value={arrival}
             onChange={(e) => setArrival(e.target.value)}
-            className="w-full border-b-2 border-ink/20 bg-transparent py-1 text-lg outline-none focus:border-bridge"
+            className="w-full rounded-xl border border-black/10 bg-[#f6f4f0] px-3 py-2.5 outline-none transition focus:border-bridge"
           />
         </Field>
         <Field label="Staying">
@@ -73,7 +73,7 @@ export default function Onboarding({ name, onSubmit }: { name: string; onSubmit:
             value={building}
             onChange={(e) => setBuilding(e.target.value)}
             placeholder="e.g. AI invoicing for LatAm SMBs"
-            className="w-full border-b-2 border-ink/20 bg-transparent py-1 text-lg outline-none focus:border-bridge"
+            className="w-full rounded-xl border border-black/10 bg-[#f6f4f0] px-3 py-2.5 outline-none transition focus:border-bridge"
           />
         </Field>
         <Field label="Anyone specific you want to meet? (optional)">
@@ -81,11 +81,11 @@ export default function Onboarding({ name, onSubmit }: { name: string; onSubmit:
             value={wantToMeet}
             onChange={(e) => setWantToMeet(e.target.value)}
             placeholder="e.g. fintech founders, pre-seed angels"
-            className="w-full border-b-2 border-ink/20 bg-transparent py-1 text-lg outline-none focus:border-bridge"
+            className="w-full rounded-xl border border-black/10 bg-[#f6f4f0] px-3 py-2.5 outline-none transition focus:border-bridge"
           />
         </Field>
-        <div className="perforated -mx-6 flex justify-end px-6 pt-5">
-          <button className="bg-bridge px-6 py-3 font-display text-2xl uppercase tracking-wide text-paper transition hover:-translate-y-0.5">
+        <div className="flex justify-end pt-2">
+          <button className="rounded-full bg-bridge px-6 py-3 font-medium text-white shadow-lg shadow-bridge/25 transition hover:brightness-95">
             Plan my landing →
           </button>
         </div>
@@ -101,7 +101,7 @@ function toggle(list: string[], v: string) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-bay">{label}</p>
+      <p className="mb-2 text-sm font-medium text-ink/70">{label}</p>
       {children}
     </div>
   );
@@ -118,7 +118,7 @@ function Chips({ options, value, onToggle }: { options: string[]; value: string[
             key={o}
             onClick={() => onToggle(o)}
             aria-pressed={on}
-            className={`border-2 border-ink px-3 py-1.5 text-sm transition ${on ? "bg-ink text-paper" : "bg-paper hover:bg-fog"}`}
+            className={`rounded-full border px-3.5 py-1.5 text-sm transition ${on ? "border-ink bg-ink text-white" : "border-black/10 bg-white hover:border-black/25"}`}
           >
             {o}
           </button>

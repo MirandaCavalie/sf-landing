@@ -80,7 +80,7 @@ export default function Chat({ context, variant = "floating" }: { context: strin
     <>
       <button
         onClick={() => setOpen((o) => !o)}
-        className={`${docked ? "lg:hidden " : ""}fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full border-2 border-ink bg-bridge px-5 py-3 font-mono text-sm uppercase tracking-wider text-paper shadow-[4px_4px_0_var(--ink)] transition hover:-translate-y-0.5`}
+        className={`${docked ? "lg:hidden " : ""}fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full bg-bridge px-5 py-3 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5`}
       >
         {open ? "✕ Close" : "✦ Ask your SF local"}
       </button>
@@ -89,25 +89,25 @@ export default function Chat({ context, variant = "floating" }: { context: strin
         <div
           className={`${
             open
-              ? "fixed inset-x-3 bottom-20 top-3 z-50 flex shadow-[8px_8px_0_var(--ink)] sm:inset-x-auto sm:right-5 sm:top-auto sm:h-[640px] sm:w-[420px]"
+              ? "fixed inset-x-3 bottom-20 top-3 z-50 flex rounded-2xl shadow-2xl sm:inset-x-auto sm:right-5 sm:top-auto sm:h-[640px] sm:w-[420px]"
               : "hidden"
-          } flex-col overflow-hidden border-2 border-ink bg-paper ${
-            docked ? "lg:sticky lg:inset-auto lg:top-0 lg:z-auto lg:flex lg:h-screen lg:w-full lg:border-y-0 lg:border-r-0 lg:shadow-none" : ""
+          } flex-col overflow-hidden border border-black/10 bg-white ${
+            docked ? "lg:sticky lg:inset-auto lg:top-0 lg:z-auto lg:flex lg:h-screen lg:w-full lg:rounded-none lg:border-y-0 lg:border-r-0 lg:shadow-none" : ""
           }`}
         >
           {/* Header + connectors */}
-          <div className="bg-ink px-4 py-3 text-paper">
+          <div className="border-b border-black/5 px-5 py-4">
             <div className="flex items-center justify-between">
-              <p className="font-display text-xl uppercase tracking-wide">
-                Your SF Local <span className="text-bridge">●</span>
+              <p className="font-semibold tracking-tight">
+                Your SF local <span className="text-bridge">●</span>
               </p>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-mist">agent · live tools</span>
+              <span className="text-xs text-ink/50">Knows your plan</span>
             </div>
-            <div className="mt-2 flex flex-wrap gap-2 font-mono text-[11px] uppercase">
+            <div className="mt-3 flex flex-wrap gap-2 text-xs">
               <Connector label="Google Calendar" on={conn.google} onClick={() => signIn("google")} />
               <Connector label="LinkedIn" on={conn.linkedin} onClick={() => signIn("linkedin")} />
               {(conn.google || conn.linkedin) && (
-                <button onClick={() => signOut()} className="px-2 py-1 text-mist underline">
+                <button onClick={() => signOut()} className="px-2 py-1 text-ink/50 hover:text-ink">
                   Sign out
                 </button>
               )}
@@ -118,13 +118,13 @@ export default function Chat({ context, variant = "floating" }: { context: strin
           <div className="flex-1 space-y-3 overflow-y-auto p-4">
             {turns.length === 0 && (
               <div>
-                <p className="text-sm text-bay">
+                <p className="text-sm text-ink/70">
                   {conn.name ? `Hey ${conn.name.split(" ")[0]}! ` : ""}I know your plan. I search our insider playbook and the live web, find people to
                   meet, draft your messages and put things on your calendar. Try:
                 </p>
                 <div className="mt-3 flex flex-col gap-2">
                   {STARTERS.map((s) => (
-                    <button key={s} onClick={() => send(s)} className="border-2 border-ink px-3 py-2 text-left text-sm hover:bg-fog">
+                    <button key={s} onClick={() => send(s)} className="rounded-xl border border-black/10 px-3 py-2.5 text-left text-sm transition hover:border-bridge/40 hover:bg-[#fff4ef]">
                       {s}
                     </button>
                   ))}
@@ -134,7 +134,7 @@ export default function Chat({ context, variant = "floating" }: { context: strin
             {turns.map((t, i) => (
               <TurnView key={i} t={t} google={conn.google} />
             ))}
-            {busy && <p className="blink font-mono text-xs uppercase text-bridge">Agent working…</p>}
+            {busy && <p className="blink text-xs text-bridge">Thinking…</p>}
             <div ref={endRef} />
           </div>
 
@@ -144,15 +144,15 @@ export default function Chat({ context, variant = "floating" }: { context: strin
               e.preventDefault();
               send(input);
             }}
-            className="flex border-t-2 border-ink"
+            className="m-3 flex rounded-full border border-black/10 bg-[#f6f4f0] p-1"
           >
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask anything about landing in SF…"
-              className="flex-1 bg-transparent px-4 py-3 outline-none"
+              className="flex-1 bg-transparent px-3 py-2 text-sm outline-none"
             />
-            <button disabled={busy} className="bg-ink px-4 font-mono text-xs uppercase text-paper disabled:opacity-50">
+            <button disabled={busy} className="rounded-full bg-ink px-4 text-sm font-medium text-white disabled:opacity-50">
               Send
             </button>
           </form>
@@ -164,9 +164,9 @@ export default function Chat({ context, variant = "floating" }: { context: strin
 
 function Connector({ label, on, onClick }: { label: string; on: boolean; onClick: () => void }) {
   return on ? (
-    <span className="flex items-center gap-1 border border-green-400/60 px-2 py-1 text-green-300">● {label}</span>
+    <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">● {label}</span>
   ) : (
-    <button onClick={onClick} className="border border-paper/40 px-2 py-1 hover:bg-paper hover:text-ink">
+    <button onClick={onClick} className="rounded-full border border-black/10 px-2.5 py-1 hover:bg-black/5">
       + Connect {label}
     </button>
   );
@@ -174,25 +174,25 @@ function Connector({ label, on, onClick }: { label: string; on: boolean; onClick
 
 function TurnView({ t, google }: { t: Turn; google: boolean }) {
   if (t.role === "user")
-    return <p className="ml-auto max-w-[85%] bg-ink px-3 py-2 text-sm text-paper">{t.text}</p>;
+    return <p className="ml-auto max-w-[85%] rounded-2xl rounded-br-md bg-ink px-3.5 py-2 text-sm text-white">{t.text}</p>;
   if (t.role === "assistant") return <p className="max-w-[95%] whitespace-pre-wrap text-sm leading-relaxed">{t.text}</p>;
-  if (t.role === "tool") return <p className="font-mono text-[11px] uppercase tracking-wider text-bay">↳ {t.label}</p>;
-  if (t.role === "error") return <p className="font-mono text-xs text-bridge">⚠ {t.text}</p>;
+  if (t.role === "tool") return <p className="text-xs text-ink/45">↳ {t.label}</p>;
+  if (t.role === "error") return <p className="text-xs text-bridge-ink">⚠ {t.text}</p>;
   return <ActionCard a={t.action} google={google} />;
 }
 
 function ActionCard({ a, google }: { a: Action; google: boolean }) {
   const [state, setState] = useState<string | null>(null);
-  const base = "border-2 border-ink bg-fog p-3 text-sm";
-  const btn = "mt-2 inline-block bg-ink px-3 py-1.5 font-mono text-[11px] uppercase text-paper";
+  const base = "rounded-2xl border border-black/5 bg-[#f6f4f0] p-3.5 text-sm";
+  const btn = "mt-2 inline-block rounded-full bg-ink px-3 py-1.5 text-xs font-medium text-white";
 
   if (a.kind === "linkedin_search")
     return (
       <div className={base}>
-        <p className="font-mono text-[10px] uppercase tracking-widest text-bay">LinkedIn · you send it</p>
+        <p className="text-xs font-medium text-ink/50">LinkedIn · you send it</p>
         <p className="mt-1 font-semibold">{a.keywords}</p>
-        <p className="text-bay">{a.why}</p>
-        <p className="mt-2 whitespace-pre-wrap bg-paper p-2 font-mono text-xs">{a.dm}</p>
+        <p className="text-ink/60">{a.why}</p>
+        <p className="mt-2 whitespace-pre-wrap rounded-lg bg-white p-2 text-xs">{a.dm}</p>
         <div className="flex gap-2">
           <button className={btn} onClick={() => (navigator.clipboard.writeText(a.dm), setState("copied"))}>
             {state === "copied" ? "Copied ✓" : "Copy DM"}
@@ -212,7 +212,7 @@ function ActionCard({ a, google }: { a: Action; google: boolean }) {
   if (a.kind === "x_post")
     return (
       <div className={base}>
-        <p className="font-mono text-[10px] uppercase tracking-widest text-bay">X post · you post it</p>
+        <p className="text-xs font-medium text-ink/50">X post · you post it</p>
         <p className="mt-1 whitespace-pre-wrap">{a.text}</p>
         <a className={btn} target="_blank" rel="noreferrer" href={`https://x.com/intent/post?text=${encodeURIComponent(a.text)}`}>
           Open in X ↗
@@ -231,9 +231,9 @@ function ActionCard({ a, google }: { a: Action; google: boolean }) {
   }
   return (
     <div className={base}>
-      <p className="font-mono text-[10px] uppercase tracking-widest text-bay">Calendar · you confirm</p>
+      <p className="text-xs font-medium text-ink/50">Calendar · you confirm</p>
       <p className="mt-1 font-semibold">{a.title}</p>
-      <p className="text-bay">
+      <p className="text-ink/60">
         {when}
         {a.location ? ` · ${a.location}` : ""}
       </p>

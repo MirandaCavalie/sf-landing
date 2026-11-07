@@ -9,6 +9,7 @@ export type Tip = {
   insight: string;
   tags?: string[];
   verify?: boolean;
+  source?: { name: string; url: string };
 };
 
 export const neighborhoods: Tip[] = [
@@ -47,6 +48,8 @@ export const neighborhoods: Tip[] = [
       "Be careful here, especially at night. Cheap listings 'near Union Square' are often actually Tenderloin — check the map before booking.",
     tags: ["caution"],
   },
+  { name: "Dogpatch / Potrero Hill", insight: "Quiet, sunny pocket with a steady cluster of YC and YC-adjacent founders.", tags: ["founder"], source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "Marina / Fort Mason", insight: "Skews toward operators and experienced founders; Founders Inc's campus is at Fort Mason.", tags: ["operators"], source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
 ];
 
 export const housing: Tip[] = [
@@ -62,6 +65,9 @@ export const housing: Tip[] = [
       "Facebook groups, Craigslist sublets and Furnished Finder. Never wire a deposit before seeing the place or video-calling inside it.",
     tags: ["sublet"],
   },
+  { name: "Shared room in SoMa", cost: "~$1,500–2,500/mo", insight: "The usual range for shared living near the action; roommates bring it down.", verify: true, source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "Rents are negotiable right now", insight: "One-bedroom rents hit multi-year lows, so landlords negotiate and short leases are easier to get.", verify: true, source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "Beware shady sublets", insight: "Sublet scams are a known newcomer pain point: verify the person and the lease before paying.", source: { name: "LaunchPad SF (Michelle Fang)", url: "https://technbiz.blogspot.com/2025/06/launchpad-sf.html" } },
 ];
 
 export const transport: Tip[] = [
@@ -141,6 +147,9 @@ export const workSpots: Tip[] = [
     tags: ["monthly"],
     verify: true,
   },
+  { name: "AngelList Founders Café", where: "90 Gold St, Financial District", cost: "Free · apply for access", insight: "Invite-only founder café: fast Wi‑Fi, outlets, free coffee, open late, plus cofounder-matching mixers.", tags: ["free", "founders"], verify: true, source: { name: "AngelList Founders Café", url: "https://ns.com/dashboard/founders-cafe" } },
+  { name: "Sightglass", insight: "Top café by founder spending in Mercury's data; deals really do get closed over coffee here.", tags: ["coffee chats"], source: { name: "Mercury data via Fast Company", url: "https://briefly-prod.herokuapp.com/anchor/SOMA_SF/story/inside-san-franciscos-coffeehouse-fueled-ai-scene-where-million-dollar-deals-happen-over-cortados" } },
+  { name: "Saint Frank, Equator, Ritual, CoffeeShop", insight: "The rest of Mercury's top-5 founder cafés: good default spots to suggest for a coffee chat.", tags: ["coffee chats"], source: { name: "Mercury data via Fast Company", url: "https://briefly-prod.herokuapp.com/anchor/SOMA_SF/story/inside-san-franciscos-coffeehouse-fueled-ai-scene-where-million-dollar-deals-happen-over-cortados" } },
 ];
 
 export const ecosystem: Tip[] = [
@@ -162,6 +171,10 @@ export const ecosystem: Tip[] = [
     insight: "Everyone knows YC — but it's not the only door. The rooms above are often easier to get into and just as useful.",
     tags: ["vc"],
   },
+  { name: "Latitud", insight: "LatAm-focused founder program and community; the obvious door for Latin American founders.", tags: ["latino"], source: { name: "LaunchPad SF (Michelle Fang)", url: "https://technbiz.blogspot.com/2025/06/launchpad-sf.html" } },
+  { name: "Unshackled Ventures", insight: "Pre-seed fund for immigrant founders that also helps with visa pathways.", tags: ["immigrant", "visa"], source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "Pre-seed funds to know", insight: "Precursor, Hustle Fund and 2048 write early checks; target a specific partner, not the firm.", tags: ["raise"], source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "Visas: O-1 and IEP", insight: "O-1 (extraordinary ability) takes a few months if well prepared; Entrepreneur Parole needs funding traction.", tags: ["visa"], verify: true, source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
 ];
 
 export const social: Tip[] = [
@@ -183,6 +196,10 @@ export const social: Tip[] = [
       "Most SF tech plans get announced on X. Post 'landing in SF on X dates, building Y, coffee's on me' — people actually reply.",
     tags: ["outreach"],
   },
+  { name: "Cerebral Valley", insight: "The AI builder community in SF; their events and hackathons are where AI founders meet.", tags: ["ai"], source: { name: "Michelle Fang — Starter Guide to SF", url: "https://www.producthunt.com/products/starter-guide-to-sf-for-founders" } },
+  { name: "AI Tinkerers", insight: "Small, technical AI meetups with demos instead of pitches.", tags: ["ai"], source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "SF IRL & Startup Digest", insight: "Michelle Fang's curated SF event lists; subscribe so the right events come to you.", tags: ["events"], source: { name: "Michelle Fang — Starter Guide to SF", url: "https://www.producthunt.com/products/starter-guide-to-sf-for-founders" } },
+  { name: "Founders Running Club", insight: "Weekly runs that double as low-pressure founder networking.", tags: ["outdoors"], source: { name: "Michelle Fang — Starter Guide to SF", url: "https://www.producthunt.com/products/starter-guide-to-sf-for-founders" } },
 ];
 
 export const culture: Tip[] = [
@@ -190,7 +207,17 @@ export const culture: Tip[] = [
   { name: "Show, don't pitch", insight: "People care what you've built. Bring a demo on your phone, not a deck." },
   { name: "Layers", insight: "It's cold and foggy in summer and changes block to block. Always carry a jacket." },
   { name: "Hackathons = networking", insight: "Weekend hackathons are the fastest way to meet builders. Go even if you don't plan to win." },
+  { name: "Small rooms beat big mixers", insight: "20–50 person dinners and meetups are where real relationships start.", source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "Listen first", insight: "In your first weeks, ask more than you pitch; people remember who was curious.", source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "Ship something by week 3", insight: "Don't stay in stealth: share a landing page or demo by your third week.", source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "Your first month", insight: "Week 1: housing + a regular workspace. Week 2: small events and coffees. Week 3: share something. Week 4: find your core five.", source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
 ];
 
-export const playbook = { neighborhoods, housing, transport, workSpots, ecosystem, social, culture };
+export const budget: Tip[] = [
+  { name: "Startup credits", insight: "Claim AWS, Google Cloud and OpenAI startup credits before you spend a dollar on infra.", source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "Incorporation", insight: "Stripe Atlas or Clerky for a Delaware C-corp; YC SAFE is the default for early rounds.", source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+  { name: "City fee waiver", insight: "San Francisco waives the first-year business registration fee for new businesses.", verify: true, source: { name: "VC Corner — Moving to SF (2026)", url: "https://www.thevccorner.com/p/guide-moving-to-san-francisco-startup-2026" } },
+];
+
+export const playbook = { neighborhoods, housing, budget, transport, workSpots, ecosystem, social, culture };
 export type Playbook = typeof playbook;

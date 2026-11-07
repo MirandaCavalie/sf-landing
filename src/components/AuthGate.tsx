@@ -23,11 +23,11 @@ export default function AuthGate() {
           </p>
           <button
             onClick={() => signIn("google")}
-            className="mt-8 flex items-center gap-3 border-2 border-ink bg-paper px-6 py-4 text-lg font-semibold shadow-[6px_6px_0_var(--bridge)] transition hover:-translate-x-0.5 hover:-translate-y-0.5"
+            className="mt-8 flex items-center gap-3 rounded-full border border-black/10 bg-white px-6 py-3.5 text-base font-medium shadow-lg transition hover:shadow-xl"
           >
             <GoogleG /> Continue with Google
           </button>
-          <p className="mt-4 max-w-sm font-mono text-[11px] uppercase leading-relaxed tracking-wider text-bay">
+          <p className="mt-4 max-w-sm text-sm text-ink/55">
             We only add events you approve. Nothing is posted or sent without your click.
           </p>
         </div>

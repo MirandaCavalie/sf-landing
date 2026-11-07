@@ -32,10 +32,10 @@ export default function Building({ status }: { status: Record<string, Status> })
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-8">
       <Wordmark />
-      <h1 className="mt-10 font-display text-5xl uppercase leading-none sm:text-6xl">
+      <h1 className="mt-10 text-4xl font-semibold tracking-tight sm:text-5xl">
         Your crew is <span className="text-bridge-ink">planning your landing</span>
       </h1>
-      <section className="mt-8 overflow-hidden rounded-sm bg-ink font-mono text-paper shadow-[6px_6px_0_var(--bridge)]">
+      <section className="mt-8 overflow-hidden rounded-2xl bg-ink font-mono text-paper shadow-xl">
         {CREW.map((b) => {
           const s = status[b.id];
           return (

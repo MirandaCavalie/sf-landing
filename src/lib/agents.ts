@@ -25,6 +25,8 @@ const Pick = z.object({
   insider: z.string().describe("The non-obvious local tip. Max 16 words."),
   cost: z.string().nullable().describe("Short, e.g. 'Free', '~$10/day'. Null if unknown."),
   needs_verification: z.boolean(),
+  lat: z.number().nullable().describe("Approximate latitude in SF if this is a physical place, else null"),
+  lng: z.number().nullable().describe("Approximate longitude, else null"),
 });
 
 export const SectionSchema = z.object({
@@ -67,6 +69,8 @@ export const WeekSchema = z.object({
               place: z.string().describe("Specific place or neighborhood"),
               kind: z.enum(["work", "coffee", "event", "explore", "logistics"]),
               note: z.string().describe("Why / tip, max 14 words"),
+              lat: z.number().describe("Approximate latitude of the place in San Francisco/Bay Area"),
+              lng: z.number().describe("Approximate longitude"),
             }),
           )
           .describe("3-4 items"),
@@ -86,7 +90,7 @@ export const AGENTS: Record<AgentId, { label: string; emoji: string; brief: stri
     emoji: "🏠",
     brief:
       "Pick where this person should stay: neighborhoods and housing strategy for their goals, budget and stay length. Be honest about areas to avoid.",
-    data: { neighborhoods: playbook.neighborhoods, housing: playbook.housing },
+    data: { neighborhoods: playbook.neighborhoods, housing: playbook.housing, budget: playbook.budget },
   },
   moving: {
     label: "Getting around",

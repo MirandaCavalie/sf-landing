@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --fog: #eeebe5;
+  --fog: #f6f4f0;
   --ink: #121212;
   --bridge: #f04a23; /* Golden Gate international orange, screen-tuned */
   --bay: #1f3a5f;
@@ -30,44 +30,30 @@ body {
 }
 
 body {
-  background-image: radial-gradient(rgba(18, 18, 18, 0.05) 1px, transparent 1px);
-  background-size: 14px 14px;
+  background: #f6f4f0;
 }
 
 .ticket {
   position: relative;
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  box-shadow: 6px 6px 0 var(--bridge);
-  transition: transform 0.15s, box-shadow 0.15s;
+  background: #ffffff;
+  border: 1px solid rgba(18, 18, 18, 0.07);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.04), 0 8px 24px -12px rgba(18, 18, 18, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .ticket:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0 var(--bridge);
+  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.05), 0 14px 32px -14px rgba(18, 18, 18, 0.2);
 }
-/* boarding-pass notches */
 .ticket-notch::before,
-.ticket-notch::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 18px;
-  height: 18px;
-  margin-top: -9px;
-  border-radius: 50%;
-  background: var(--fog);
-  border: 2px solid var(--ink);
-}
-.ticket-notch::before { left: -11px; clip-path: inset(0 0 0 50%); }
-.ticket-notch::after { right: -11px; clip-path: inset(0 50% 0 0); }
+.ticket-notch::after { display: none; }
 
-.perforated { border-top: 2px dashed var(--ink); }
+.perforated { border-top: 1px dashed rgba(18, 18, 18, 0.15); }
 
 .hero-art {
   position: relative;
   overflow: hidden;
-  border: 2px solid var(--ink);
-  box-shadow: 6px 6px 0 var(--ink);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px -20px rgba(240, 74, 35, 0.45);
 }
 
 /* split-flap tiles */
@@ -101,3 +87,5 @@ body {
   .flap, .blink { animation: none; }
   .ticket, .ticket:hover { transition: none; transform: none; }
 }
+
+.sfl-tiles { filter: grayscale(0.85) brightness(1.06) contrast(0.92); }
