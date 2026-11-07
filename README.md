@@ -69,7 +69,7 @@ LinkedIn only gives third-party apps your name, photo and email: it does not let
 
 ## Deploy
 
-Hosted on Vercel (team `mirandas-projects-c0316355`, project `sf-landing`). Env vars live in Vercel → Settings → Environment Variables (plus `AUTH_TRUST_HOST=true`). Deploy with:
+Hosted on Vercel (team `mirandas-projects-c0316355`, project `sf-landing`). Env vars live in Vercel → Settings → Environment Variables (plus `AUTH_TRUST_HOST=true`). Pushes to `main` deploy to production automatically (GitHub ↔ Vercel connected). Manual deploy:
 
 ```bash
 npx vercel deploy --prod --scope mirandas-projects-c0316355
