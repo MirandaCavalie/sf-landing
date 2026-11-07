@@ -14,10 +14,10 @@ type Turn =
 type Connected = { google: boolean; linkedin: boolean; name?: string; image?: string };
 
 const STARTERS = [
-  "What tech events in SF should I go to the week I land?",
-  "Find me someone to grab coffee with on Day 2",
-  "Is my neighborhood safe at night? Where should I avoid?",
-  "Write my X post announcing I'm landing",
+  "Best events the week I land?",
+  "Find me a coffee for Day 2",
+  "Is my area safe at night?",
+  "Cheapest place to work?",
 ];
 
 export default function Chat({ context, variant = "floating" }: { context: string; variant?: "floating" | "docked" }) {
@@ -132,8 +132,7 @@ export default function Chat({ context, variant = "floating" }: { context: strin
             {turns.length === 0 && (
               <div>
                 <p className="text-sm text-ink/70">
-                  {conn.name ? `Hey ${conn.name.split(" ")[0]}! ` : ""}I know your plan. I search our insider playbook and the live web, find people to
-                  meet, draft your messages and put things on your calendar. Try:
+                  {conn.name ? `Hey ${conn.name.split(" ")[0]}! ` : ""}Ask me anything about SF. Try:
                 </p>
                 <div className="mt-3 flex flex-col gap-2">
                   {STARTERS.map((s) => (

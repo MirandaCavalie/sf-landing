@@ -170,7 +170,7 @@ export default function Dashboard({
 }
 
 function Missing() {
-  return <p className="text-sm text-ink/60">This part didn&apos;t load. Ask the agent and it will fill it in.</p>;
+  return <p className="text-sm text-ink/60">Didn&apos;t load. Ask the agent.</p>;
 }
 
 function Title({ children, sub }: { children: React.ReactNode; sub?: string }) {
@@ -368,9 +368,7 @@ function MapView({ plan }: { plan: Plan }) {
 
   return (
     <section>
-      <Title sub="Your plan plus every tech event and party happening that week. Bigger bubble, bigger crowd.">
-        SF the week you land
-      </Title>
+      <Title sub="Bigger bubble = more people going.">What&apos;s on that week</Title>
       <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
         {(["plan", "events"] as const).map((k) => (
           <button
@@ -433,7 +431,7 @@ function MapView({ plan }: { plan: Plan }) {
 function SectionView({ s }: { s: Section }) {
   return (
     <section>
-      <Title sub="Picked for you by your agent">{s.headline}</Title>
+      <Title>{s.headline}</Title>
       <div className="grid gap-3 md:grid-cols-3">
         {s.picks.slice(0, 3).map((p) => (
           <article key={p.name} className="ticket flex flex-col p-5">
@@ -469,7 +467,7 @@ function GuideView({ groups }: { groups: { title: string; tips: Tip[] }[] }) {
   if (!visible.length) return null;
   return (
     <section className="mt-10">
-      <Title sub="What locals know, from our playbook and SF founder guides">The full local guide</Title>
+      <Title>More local tips</Title>
       <div className="space-y-2">
         {visible.map((g) => (
           <div key={g.title} className="ticket overflow-hidden">
@@ -553,7 +551,7 @@ function NetworkView() {
   if (data.error)
     return (
       <section className="mb-10">
-        <Title sub="Connect your Notion CRM to see who you already know in SF.">Your network in SF</Title>
+        <Title>Your people in SF</Title>
         <p className="ticket p-4 text-sm text-ink/70">Notion isn&apos;t connected yet ({data.error}).</p>
       </section>
     );
@@ -561,9 +559,7 @@ function NetworkView() {
   const contacts = (data.contacts ?? []).filter((c) => all || c.inSF);
   return (
     <section className="mb-10">
-      <Title sub="From your Notion CRM. People you can actually see in person this week.">
-        Your network in SF
-      </Title>
+      <Title sub="From your Notion CRM.">Your people in SF</Title>
       <div className="mb-3 flex items-center gap-2 text-sm">
         <button onClick={() => setAll(false)} className={`rounded-full px-3 py-1.5 font-medium ${!all ? "bg-ink text-white" : "bg-black/5 text-ink/60"}`}>
           In SF ({(data.contacts ?? []).filter((c) => c.inSF).length})
@@ -596,7 +592,9 @@ function NetworkView() {
                   {c.relationship && <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${REL_COLOR[c.relationship] ?? ""}`}>{c.relationship}</span>}
                   {c.lastContact && <p className="mt-1 text-xs text-ink/45">Last: {c.lastContact}</p>}
                 </td>
-                <td className="max-w-[220px] px-4 py-3 text-ink/70">{c.nextStep || "—"}</td>
+                <td className="max-w-[220px] px-4 py-3 text-ink/70">
+                  <p className="line-clamp-2" title={c.nextStep}>{c.nextStep || "—"}</p>
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex justify-end gap-2">
                     {c.linkedin && (
@@ -641,7 +639,7 @@ function PeopleView({ o }: { o: Outreach }) {
   };
   return (
     <section>
-      <Title sub="Messages are drafted. You send them.">{o.headline}</Title>
+      <Title sub="Copy, paste, send.">Who to meet</Title>
       <div className="grid gap-3 md:grid-cols-3">
         {o.targets.slice(0, 3).map((t) => (
           <article key={t.who} className="ticket flex flex-col p-5">
@@ -669,7 +667,7 @@ function PeopleView({ o }: { o: Outreach }) {
         ))}
       </div>
       <div className="ticket mt-4 p-5">
-        <h3 className="font-semibold">Announce your landing on X</h3>
+        <h3 className="font-semibold">Post on X</h3>
         <p className="mt-2 whitespace-pre-wrap text-sm text-ink/80">{o.x_post}</p>
         <a
           target="_blank"
