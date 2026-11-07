@@ -49,8 +49,12 @@ export default function Home() {
     setData({});
     setErrors({});
     setStatus({});
-    const res = await fetch("/api/plan", { method: "POST", body: JSON.stringify(profile) });
-    const reader = res.body!.getReader();
+    // ?replay plays back a recorded real run (offline backup for live demos).
+    const replay = new URLSearchParams(window.location.search).has("replay");
+    const res = replay
+      ? await fetch("/demo-run.ndjson")
+      : await fetch("/api/plan", { method: "POST", body: JSON.stringify(profile) });
+    const reader = replay ? paced(await res.text()) : res.body!.getReader();
     const dec = new TextDecoder();
     let buf = "";
     for (;;) {
@@ -223,6 +227,21 @@ export default function Home() {
       </footer>
     </main>
   );
+}
+
+// Re-emits recorded NDJSON lines with realistic delays so the board animates.
+function paced(text: string) {
+  const enc = new TextEncoder();
+  const lines = text.split("\n").filter(Boolean);
+  let i = 0;
+  return {
+    async read(): Promise<{ done: boolean; value?: Uint8Array }> {
+      if (i >= lines.length) return { done: true };
+      const line = lines[i++];
+      await new Promise((r) => setTimeout(r, line.includes("agent_done") ? 1200 + Math.random() * 1500 : 150));
+      return { done: false, value: enc.encode(line + "\n") };
+    },
+  };
 }
 
 function SectionTitle({ kicker, title }: { kicker: string; title: string }) {
