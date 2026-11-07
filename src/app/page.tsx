@@ -84,8 +84,8 @@ export default function Home() {
   }
 
   const started = Object.keys(status).length > 0;
-  const week = data.coordinator as Week 
-  const chatContext = profile.name ? JSON.stringify({ profile, plan: data }).slice(0, 12000) : "";| undefined;
+  const week = data.coordinator as Week | undefined;
+  const chatContext = profile.name ? JSON.stringify({ profile, plan: data }).slice(0, 12000) : "";
 
   return (
     <main className="mx-auto max-w-6xl px-4 pb-24 sm:px-8">
@@ -102,7 +102,7 @@ export default function Home() {
           <h1 className="mt-2 font-display text-6xl uppercase leading-[0.9] sm:text-8xl">
             Land like
             <br />
-            <span className="bg-bridge px-2 text-paper">a local.</span>
+            <span className="mt-2 inline-block bg-bridge px-2 pt-1 text-paper">a local.</span>
           </h1>
           <p className="mt-6 max-w-md text-lg">
             Not another &ldquo;moving to SF&rdquo; guide. A crew of AI agents that knows the $10 coworkings, the cafés with real

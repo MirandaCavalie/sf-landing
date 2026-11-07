@@ -35,3 +35,32 @@ npm run dev                  # http://localhost:3000
 ## Grow the playbook
 
 Add tips to `src/data/playbook.ts`. That file is the product: the more local, specific and honest it is, the better every agent gets.
+
+## Agent chat + connectors
+
+The floating **"Ask your SF local"** button opens a tool-using agent (`src/lib/chat-agent.ts`):
+
+| Tool | What it does |
+|---|---|
+| `search_playbook` | Searches our insider playbook |
+| `web_search` | Live web search (this week's Luma/Partiful events, prices, hours) |
+| `suggest_linkedin_search` | Card with a LinkedIn people search + a ready DM (you send it) |
+| `draft_x_post` | Card that opens X's composer with the draft (you post it) |
+| `propose_calendar_event` | Card → one click adds it to Google Calendar, or download `.ics` |
+
+### Connect Google (Calendar) and LinkedIn
+
+Add to `.env.local` (generate `AUTH_SECRET` with `openssl rand -base64 32`):
+
+```
+AUTH_SECRET=
+AUTH_GOOGLE_ID=
+AUTH_GOOGLE_SECRET=
+AUTH_LINKEDIN_ID=
+AUTH_LINKEDIN_SECRET=
+```
+
+- **Google:** Google Cloud Console → APIs & Services → enable *Google Calendar API* → OAuth consent screen (External, add yourself as test user, scope `calendar.events`) → Credentials → OAuth client ID (Web). Redirect URI: `http://localhost:3000/api/auth/callback/google`.
+- **LinkedIn:** linkedin.com/developers → Create app → Products: *Sign In with LinkedIn using OpenID Connect* → Auth tab. Redirect URI: `http://localhost:3000/api/auth/callback/linkedin`.
+
+LinkedIn only gives third-party apps your name, photo and email: it does not let apps search people or send messages. That's why the agent drafts the DM and the human sends it.
