@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { Wordmark } from "@/components/brand/Logo";
+import { BridgeHero } from "@/components/brand/BridgeHero";
 import type { Outreach, Profile, Section, Week } from "@/lib/agents";
 
 type Status = "idle" | "boarding" | "landed" | "delayed";
@@ -87,32 +89,36 @@ export default function Home() {
     <main className="mx-auto max-w-6xl px-4 pb-24 sm:px-8">
       {/* Header */}
       <header className="flex items-center justify-between py-6 font-mono text-xs uppercase tracking-widest">
-        <span className="flex items-center gap-2">
-          <span className="inline-block h-3 w-3 rounded-full bg-bridge" /> SF Landing
-        </span>
+        <Wordmark />
         <span className="hidden sm:inline">SFO → Your new life · 37.77°N 122.42°W</span>
       </header>
 
       {/* Hero */}
-      <section className="grid gap-8 pt-6 md:grid-cols-[1.2fr_1fr] md:items-end">
-        <div>
+      <section className="grid gap-8 pt-6 md:grid-cols-[1.1fr_1fr] md:items-stretch">
+        <div className="flex flex-col justify-center">
           <p className="font-mono text-sm uppercase tracking-widest text-bay">Arrivals · San Francisco</p>
-          <h1 className="font-display text-6xl uppercase leading-[0.9] sm:text-8xl">
+          <h1 className="mt-2 font-display text-6xl uppercase leading-[0.9] sm:text-8xl">
             Land like
             <br />
-            <span className="text-bridge">a local.</span>
+            <span className="bg-bridge px-2 text-paper">a local.</span>
           </h1>
+          <p className="mt-6 max-w-md text-lg">
+            Not another &ldquo;moving to SF&rdquo; guide. A crew of AI agents that knows the $10 coworkings, the cafés with real
+            Wi‑Fi, which blocks to skip at night, the Luma calendars that matter — and books your first coffees.
+          </p>
         </div>
-        <p className="max-w-md text-lg">
-          Not another &ldquo;moving to SF&rdquo; guide. A crew of AI agents that knows the $10 coworkings, the cafés with real
-          Wi‑Fi, which blocks to skip at night, the Luma calendars that matter — and books your first coffees.
-        </p>
+        <div className="hero-art min-h-56 md:min-h-80">
+          <BridgeHero />
+          <span className="absolute left-3 top-3 bg-ink px-2 py-1 font-mono text-[11px] uppercase tracking-widest text-paper">
+            SFO → GGB · On time
+          </span>
+        </div>
       </section>
 
       {/* Boarding pass form */}
-      <section className="ticket mt-12">
+      <section className="ticket ticket-notch mt-12">
         <div className="flex items-center justify-between border-b-2 border-ink bg-ink px-5 py-3 font-mono text-xs uppercase tracking-widest text-paper">
-          <span>Boarding pass</span>
+          <span>Boarding pass · SFL 001</span>
           <button
             type="button"
             onClick={() => setProfile(DEMO)}
@@ -150,7 +156,7 @@ export default function Home() {
 
       {/* Arrivals board */}
       {started && (
-        <section className="mt-12 overflow-hidden rounded-sm bg-ink font-mono text-paper">
+        <section className="mt-12 overflow-hidden rounded-sm border-t-4 border-bridge bg-ink font-mono text-paper shadow-[6px_6px_0_var(--bridge)]">
           <div className="grid grid-cols-[3rem_1fr_6rem] gap-2 border-b border-paper/20 px-5 py-3 text-[11px] uppercase tracking-widest text-mist sm:grid-cols-[4rem_1fr_6rem_8rem]">
             <span>Gate</span>
             <span>Agent</span>
@@ -171,10 +177,10 @@ export default function Home() {
                 <span className="hidden text-mist sm:block">SFL {100 + i * 7}</span>
                 <span
                   className={`text-right text-sm uppercase ${
-                    s === "landed" ? "text-green-400" : s === "delayed" ? "text-bridge" : s === "boarding" ? "blink text-yellow-300" : "text-mist"
+                    s === "landed" ? "text-green-400" : s === "delayed" ? "text-[#ff7a57]" : s === "boarding" ? "blink text-yellow-300" : "text-mist"
                   }`}
                 >
-                  {s === "idle" ? "Scheduled" : s}
+                  <Flap text={s === "idle" ? "Scheduled" : s} />
                 </span>
               </div>
             );
@@ -183,7 +189,7 @@ export default function Home() {
       )}
 
       {Object.entries(errors).map(([id, msg]) => (
-        <p key={id} className="mt-3 font-mono text-sm text-bridge">
+        <p key={id} className="mt-3 font-mono text-sm text-bridge-ink">
           {id}: {msg}
         </p>
       ))}
@@ -195,7 +201,7 @@ export default function Home() {
           <div className="mb-8 grid gap-4 md:grid-cols-3">
             {week.secrets.map((s, i) => (
               <div key={i} className="ticket p-5">
-                <p className="font-mono text-[11px] uppercase tracking-widest text-bridge">Secret #{i + 1}</p>
+                <p className="font-mono text-[11px] uppercase tracking-widest text-bridge-ink">Secret #{i + 1}</p>
                 <p className="mt-2 text-lg leading-snug">{s}</p>
               </div>
             ))}
@@ -244,6 +250,18 @@ function paced(text: string) {
   };
 }
 
+function Flap({ text }: { text: string }) {
+  return (
+    <span aria-label={text} key={text}>
+      {text.split("").map((c, i) => (
+        <span key={i} aria-hidden="true" className="flap" style={{ animationDelay: `${i * 30}ms` }}>
+          {c.toUpperCase()}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function SectionTitle({ kicker, title }: { kicker: string; title: string }) {
   return (
     <div className="mb-6">
@@ -256,7 +274,7 @@ function SectionTitle({ kicker, title }: { kicker: string; title: string }) {
 function Slot({ label, text }: { label: string; text: string }) {
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-widest text-bridge">{label}</p>
+      <p className="font-mono text-[11px] uppercase tracking-widest text-bridge-ink">{label}</p>
       <p className="mt-1 leading-snug">{text}</p>
     </div>
   );
@@ -283,7 +301,7 @@ function SectionCard({ id, s }: { id: string; s: Section }) {
         ))}
         {s.watch_out.length > 0 && (
           <div className="border-2 border-bridge bg-bridge/10 p-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-bridge">Watch out</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-bridge-ink">Watch out</p>
             <ul className="mt-2 list-disc space-y-1 pl-5">
               {s.watch_out.map((w) => (
                 <li key={w}>{w}</li>

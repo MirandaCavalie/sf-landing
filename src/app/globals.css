@@ -7,6 +7,7 @@
   --bay: #1f3a5f;
   --mist: #8fa3b5;
   --paper: #fbfaf7;
+  --bridge-ink: #bf3213; /* darker orange for small text, 5:1 on paper */
 }
 
 @theme inline {
@@ -16,6 +17,7 @@
   --color-bay: var(--bay);
   --color-mist: var(--mist);
   --color-paper: var(--paper);
+  --color-bridge-ink: var(--bridge-ink);
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
@@ -27,17 +29,75 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+body {
+  background-image: radial-gradient(rgba(18, 18, 18, 0.05) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+
 .ticket {
+  position: relative;
   background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--bridge);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.ticket:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--bridge);
+}
+/* boarding-pass notches */
+.ticket-notch::before,
+.ticket-notch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  border-radius: 50%;
+  background: var(--fog);
+  border: 2px solid var(--ink);
+}
+.ticket-notch::before { left: -11px; clip-path: inset(0 0 0 50%); }
+.ticket-notch::after { right: -11px; clip-path: inset(0 50% 0 0); }
+
+.perforated { border-top: 2px dashed var(--ink); }
+
+.hero-art {
+  position: relative;
+  overflow: hidden;
   border: 2px solid var(--ink);
   box-shadow: 6px 6px 0 var(--ink);
 }
 
-.perforated {
-  border-top: 2px dashed var(--ink);
+/* split-flap tiles */
+.flap {
+  display: inline-block;
+  min-width: 1.1ch;
+  padding: 2px 3px;
+  margin-left: 2px;
+  background: #1d1d1d;
+  border-radius: 2px;
+  text-align: center;
+  position: relative;
+  animation: flip 0.35s ease-out both;
+}
+.flap::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  background: #000;
+}
+@keyframes flip {
+  from { transform: rotateX(90deg); opacity: 0; }
+  to { transform: rotateX(0); opacity: 1; }
 }
 
-@keyframes blink {
-  50% { opacity: 0.25; }
-}
+@keyframes blink { 50% { opacity: 0.25; } }
 .blink { animation: blink 1s steps(2) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .flap, .blink { animation: none; }
+  .ticket, .ticket:hover { transition: none; transform: none; }
+}
