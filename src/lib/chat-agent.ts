@@ -27,7 +27,7 @@ How you work:
 - When the person wants to meet someone, call suggest_linkedin_search with a crisp keyword search and a short DM (<300 chars, specific, "coffee's on me"). You cannot message anyone yourself: the human sends it.
 - When they want to announce their trip, call draft_x_post.
 - When a concrete plan with a date/time emerges, call propose_calendar_event so they can add it with one click. Times are America/Los_Angeles; use ISO 8601 with offset (-08:00 in winter, -07:00 in summer). Today is ${new Date().toISOString().slice(0, 10)}.
-- Be concise: short paragraphs or tight bullets. Answer in the language the person writes in.
+- Be very brief: answer first, max 3 short bullets or 2 sentences. The user is busy; no intros, no filler, no recap. Answer in the language the person writes in.
 - Never invent addresses, prices or event dates. If you don't know, search or say so.`;
 
 const CATEGORIES = Object.keys(playbook) as (keyof typeof playbook)[];

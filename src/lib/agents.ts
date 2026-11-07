@@ -21,8 +21,8 @@ export type Profile = {
 
 const Pick = z.object({
   name: z.string(),
-  one_liner: z.string().describe("Why this, for THIS person. Max 14 words."),
-  insider: z.string().describe("The non-obvious local tip. Max 16 words."),
+  one_liner: z.string().describe("Why it fits them. Max 8 words, no fluff."),
+  insider: z.string().describe("One insider tip. Max 10 words."),
   cost: z.string().nullable().describe("Short, e.g. 'Free', '~$10/day'. Null if unknown."),
   needs_verification: z.boolean(),
   lat: z.number().nullable().describe("Approximate latitude in SF if this is a physical place, else null"),
@@ -30,9 +30,9 @@ const Pick = z.object({
 });
 
 export const SectionSchema = z.object({
-  headline: z.string().describe("The answer in 4-8 words, e.g. 'Live in the Mission, work in SoMa'"),
+  headline: z.string().describe("The answer in max 6 words, e.g. 'Mission, near Valencia'"),
   picks: z.array(Pick).describe("Exactly 3 picks, best first"),
-  watch_out: z.string().nullable().describe("The ONE warning a local would give. Max 18 words."),
+  watch_out: z.string().nullable().describe("The ONE warning. Max 10 words."),
 });
 export type Section = z.infer<typeof SectionSchema>;
 
@@ -41,34 +41,34 @@ export const OutreachSchema = z.object({
   targets: z
     .array(
       z.object({
-        who: z.string().describe("Type of person, e.g. 'Seed-stage fintech founder'"),
-        why: z.string().describe("Max 14 words"),
+        who: z.string().describe("Type of person, max 5 words, e.g. 'Pre-seed fintech founder'"),
+        why: z.string().describe("Max 6 words"),
         linkedin_search: z.string().describe("Keywords for LinkedIn people search"),
-        dm: z.string().describe("LinkedIn DM <280 chars, specific, offers to pay for coffee"),
+        dm: z.string().describe("LinkedIn DM, max 2 short sentences (<160 chars): who you are + the ask (coffee on me). No filler."),
       }),
     )
     .describe("Exactly 3 targets"),
-  x_post: z.string().describe("Post for X announcing the trip and inviting coffee chats, <260 chars"),
+  x_post: z.string().describe("Post for X, max 2 short lines (<140 chars): landing dates + what you want + DMs open"),
 });
 export type Outreach = z.infer<typeof OutreachSchema>;
 
 export const WeekSchema = z.object({
-  tagline: z.string().describe("One line summary of their week, max 12 words"),
-  secrets: z.array(z.string()).describe("Exactly 3 things nobody tells newcomers, max 16 words each"),
+  tagline: z.string().describe("Their week in max 7 words"),
+  secrets: z.array(z.string()).describe("Exactly 3 local secrets, max 9 words each"),
   days: z
     .array(
       z.object({
         date: z.string().describe("YYYY-MM-DD"),
-        theme: z.string().describe("2-4 words, e.g. 'Land & settle in'"),
+        theme: z.string().describe("2-3 words, e.g. 'Land & settle'"),
         items: z
           .array(
             z.object({
               start: z.string().describe("HH:MM 24h, local SF time"),
               end: z.string().describe("HH:MM 24h"),
-              title: z.string().describe("Max 7 words"),
+              title: z.string().describe("Max 5 words"),
               place: z.string().describe("Specific place or neighborhood"),
               kind: z.enum(["work", "coffee", "event", "explore", "logistics"]),
-              note: z.string().describe("Why / tip, max 14 words"),
+              note: z.string().describe("Tip, max 8 words"),
               lat: z.number().describe("Approximate latitude of the place in San Francisco/Bay Area"),
               lng: z.number().describe("Approximate longitude"),
             }),
@@ -121,7 +121,7 @@ export const AGENTS: Record<AgentId, { label: string; emoji: string; brief: stri
 const SYSTEM = `You are part of SF Landing, a team of agents that helps founders and builders land in San Francisco like a local.
 Your edge is insider knowledge, not generic advice. Ground every recommendation in the PLAYBOOK; you may add widely known facts, but never invent prices, addresses or event dates.
 If a playbook item has verify: true, set needs_verification to true for it.
-Be ruthlessly concise: respect every word limit. A newcomer is overwhelmed; give them the 3 best answers, not a list.
+Be ruthlessly concise: respect every word limit. The user is busy and lazy: give the direct answer, no filler words, no em dashes, no 'consider', no explanations they didn't ask for.
 Write in English.`;
 
 function profileText(p: Profile) {
