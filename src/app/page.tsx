@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Wordmark } from "@/components/brand/Logo";
 import { BridgeHero } from "@/components/brand/BridgeHero";
+import Chat from "@/components/Chat";
 import type { Outreach, Profile, Section, Week } from "@/lib/agents";
 
 type Status = "idle" | "boarding" | "landed" | "delayed";
@@ -83,7 +84,8 @@ export default function Home() {
   }
 
   const started = Object.keys(status).length > 0;
-  const week = data.coordinator as Week | undefined;
+  const week = data.coordinator as Week 
+  const chatContext = profile.name ? JSON.stringify({ profile, plan: data }).slice(0, 12000) : "";| undefined;
 
   return (
     <main className="mx-auto max-w-6xl px-4 pb-24 sm:px-8">
@@ -231,6 +233,7 @@ export default function Home() {
       <footer className="mt-24 font-mono text-xs uppercase tracking-widest text-bay">
         Built at the Anything Applied Agentic Hackathon · EF, 501 Folsom · Nov 7, 2026
       </footer>
+      <Chat context={chatContext} />
     </main>
   );
 }
@@ -252,9 +255,9 @@ function paced(text: string) {
 
 function Flap({ text }: { text: string }) {
   return (
-    <span aria-label={text} key={text}>
+    <span aria-label={text}>
       {text.split("").map((c, i) => (
-        <span key={i} aria-hidden="true" className="flap" style={{ animationDelay: `${i * 30}ms` }}>
+        <span key={`${text}-${i}`} aria-hidden="true" className="flap" style={{ animationDelay: `${i * 30}ms` }}>
           {c.toUpperCase()}
         </span>
       ))}
