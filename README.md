@@ -1,6 +1,6 @@
 # SF Landing — land like a local
 
-**Live:** https://sf-landing-seven.vercel.app · offline demo backup: https://sf-landing-seven.vercel.app/?replay
+**Live:** https://sflanding.com · offline demo (no sign-in): https://sflanding.com/?demo
 
 A crew of AI agents that lands founders and builders in San Francisco with the insights nobody tells you: the $10 coworkings, the cafés with real Wi‑Fi, which blocks to skip at night, the Luma calendars that matter — and drafts your first coffee chats.
 
@@ -75,4 +75,4 @@ Hosted on Vercel (team `mirandas-projects-c0316355`, project `sf-landing`). Env 
 npx vercel deploy --prod --scope mirandas-projects-c0316355
 ```
 
-OAuth redirect URIs registered for both `http://localhost:3000` and `https://sf-landing-seven.vercel.app` (`/api/auth/callback/google` and `/api/auth/callback/linkedin`).
+OAuth redirect URIs registered for `http://localhost:3000`, `https://sf-landing-seven.vercel.app` and `https://www.sflanding.com` (apex `sflanding.com` redirects to www) (`/api/auth/callback/google` and `/api/auth/callback/linkedin`).
