@@ -1,5 +1,7 @@
 # SF Landing — land like a local
 
+**Live:** https://sf-landing-seven.vercel.app · offline demo backup: https://sf-landing-seven.vercel.app/?replay
+
 A crew of AI agents that lands founders and builders in San Francisco with the insights nobody tells you: the $10 coworkings, the cafés with real Wi‑Fi, which blocks to skip at night, the Luma calendars that matter — and drafts your first coffee chats.
 
 Built at the Anything Applied Agentic Hackathon (EF, 501 Folsom, Nov 7 2026).
@@ -64,3 +66,13 @@ AUTH_LINKEDIN_SECRET=
 - **LinkedIn:** linkedin.com/developers → Create app → Products: *Sign In with LinkedIn using OpenID Connect* → Auth tab. Redirect URI: `http://localhost:3000/api/auth/callback/linkedin`.
 
 LinkedIn only gives third-party apps your name, photo and email: it does not let apps search people or send messages. That's why the agent drafts the DM and the human sends it.
+
+## Deploy
+
+Hosted on Vercel (team `mirandas-projects-c0316355`, project `sf-landing`). Env vars live in Vercel → Settings → Environment Variables (plus `AUTH_TRUST_HOST=true`). Deploy with:
+
+```bash
+npx vercel deploy --prod --scope mirandas-projects-c0316355
+```
+
+OAuth redirect URIs registered for both `http://localhost:3000` and `https://sf-landing-seven.vercel.app` (`/api/auth/callback/google` and `/api/auth/callback/linkedin`).
