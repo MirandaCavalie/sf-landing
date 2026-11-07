@@ -1,26 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --fog: #eeebe5;
+  --ink: #121212;
+  --bridge: #f04a23; /* Golden Gate international orange, screen-tuned */
+  --bay: #1f3a5f;
+  --mist: #8fa3b5;
+  --paper: #fbfaf7;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-fog: var(--fog);
+  --color-ink: var(--ink);
+  --color-bridge: var(--bridge);
+  --color-bay: var(--bay);
+  --color-mist: var(--mist);
+  --color-paper: var(--paper);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--fog);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
+
+.ticket {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.perforated {
+  border-top: 2px dashed var(--ink);
+}
+
+@keyframes blink {
+  50% { opacity: 0.25; }
+}
+.blink { animation: blink 1s steps(2) infinite; }

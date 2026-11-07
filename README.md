@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SF Landing — land like a local
 
-## Getting Started
+A crew of AI agents that lands founders and builders in San Francisco with the insights nobody tells you: the $10 coworkings, the cafés with real Wi‑Fi, which blocks to skip at night, the Luma calendars that matter — and drafts your first coffee chats.
 
-First, run the development server:
+Built at the Anything Applied Agentic Hackathon (EF, 501 Folsom, Nov 7 2026).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## How it works
+
+```
+Boarding pass (profile)
+        │
+        ▼
+ /api/plan  ── runs in parallel ──►  🏠 Base Camp     (neighborhoods, housing, where NOT to stay)
+                                     🛴 Getting Around (Lime pass vs Muni vs Waymo, real costs)
+                                     ☕ Where to Work  (hidden cafés, free spots, day passes)
+                                     🎟️ The Scene      (EF, SPC, Founders Inc, Luma, Partiful, parties)
+                                     🤝 Coffee Agent   (who to meet + LinkedIn DMs + X post)
+        │
+        ▼
+ 🗓️ Coordinator → your first 7 days + top 3 secrets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Every agent is grounded in `src/data/playbook.ts`, our curated insider knowledge base. Items marked `verify` need a human to double-check the price or schedule.
+- Agents use Claude (`claude-opus-5-5`) with structured outputs and stream their status to an airport-style arrivals board.
+- **The human sends every message.** The Coffee Agent only drafts DMs and opens LinkedIn search or the X composer. LinkedIn forbids automated messaging, and sending them yourself keeps your account safe.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Run it
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cp .env.example .env.local   # add your ANTHROPIC_API_KEY
+npm install
+npm run dev                  # http://localhost:3000
+```
 
-## Learn More
+## Grow the playbook
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Add tips to `src/data/playbook.ts`. That file is the product: the more local, specific and honest it is, the better every agent gets.
