@@ -41,6 +41,19 @@ export default function Chat({ context, variant = "floating" }: { context: strin
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [turns]);
 
+  // Other parts of the app (e.g. "Plan a 1:1" in People) can hand the agent a task.
+  const sendRef = useRef<(t: string) => void>(() => {});
+  useEffect(() => {
+    const onAsk = (e: Event) => {
+      setOpen(true);
+      sendRef.current((e as CustomEvent<string>).detail);
+    };
+    window.addEventListener("sfl:ask", onAsk);
+    return () => window.removeEventListener("sfl:ask", onAsk);
+  }, []);
+
+  sendRef.current = (t: string) => void send(t);
+
   async function send(text: string) {
     if (!text.trim() || busy) return;
     const next: Turn[] = [...turns, { role: "user", text }];

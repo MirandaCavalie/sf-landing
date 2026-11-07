@@ -11,6 +11,7 @@ import {
   Lightbulb,
   Map as MapIcon,
   MapPin,
+  RefreshCw,
   Ticket,
   TramFront,
   TriangleAlert,
@@ -18,7 +19,7 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Chat from "@/components/Chat";
 import { LogoMark } from "@/components/brand/Logo";
 import type { MapPoint } from "@/components/PlanMap";
@@ -148,7 +149,12 @@ export default function Dashboard({
         <div className="mt-5">
           {tab === "week" && (week ? <WeekView week={week} google={google} /> : <Missing />)}
           {tab === "map" && <MapView plan={plan} />}
-          {tab === "people" && (plan.people ? <PeopleView o={plan.people as Outreach} /> : <Missing />)}
+          {tab === "people" && (
+            <>
+              <NetworkView />
+              {plan.people ? <PeopleView o={plan.people as Outreach} /> : <Missing />}
+            </>
+          )}
           {isSection && (
             <>
               {plan[tab] ? <SectionView s={plan[tab] as Section} /> : <Missing />}
@@ -280,40 +286,146 @@ function WeekView({ week, google }: { week: Week; google: boolean }) {
   );
 }
 
+type SFEvent = {
+  source: "Luma" | "Partiful";
+  title: string;
+  url: string;
+  start: string;
+  venue: string | null;
+  neighborhood: string | null;
+  lat: number | null;
+  lng: number | null;
+  going: number | null;
+};
+
+const SOURCE_COLOR = { Luma: "#7c3aed", Partiful: "#e11d74" } as const;
+
+const laTime = (iso: string) =>
+  new Date(iso).toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", timeZone: "America/Los_Angeles" });
+
 function MapView({ plan }: { plan: Plan }) {
   const week = plan.coordinator as Week | undefined;
+  const from = week?.days[0]?.date;
+  const to = week?.days[week.days.length - 1]?.date;
+  const [events, setEvents] = useState<SFEvent[] | null>(null);
+  const [state, setState] = useState<"idle" | "live" | "error">("idle");
+  const [show, setShow] = useState({ plan: true, events: true });
+
+  useEffect(() => {
+    if (!from || !to) return;
+    fetch(`/api/events?from=${from}&to=${to}`)
+      .then((r) => r.json())
+      .then((d) => setEvents(d.events ?? []))
+      .catch(() => setEvents([]));
+  }, [from, to]);
+
+  async function refreshLive() {
+    if (!from || !to) return;
+    setState("live");
+    try {
+      const d = await fetch(`/api/events?from=${from}&to=${to}&live=1`).then((r) => r.json());
+      setEvents(d.events ?? []);
+      setState("idle");
+    } catch {
+      setState("error");
+    }
+  }
+
   const points: MapPoint[] = [];
-  week?.days.forEach((d, di) =>
-    d.items.forEach((it) => {
-      if (typeof it.lat === "number" && typeof it.lng === "number")
+  if (show.events)
+    (events ?? []).forEach((e) => {
+      if (e.lat !== null && e.lng !== null)
         points.push({
-          lat: it.lat,
-          lng: it.lng,
-          title: it.title,
-          subtitle: `Day ${di + 1} · ${it.start} · ${it.place}`,
-          color: KIND[it.kind]?.color ?? "#121212",
-          label: String(di + 1),
+          lat: e.lat,
+          lng: e.lng,
+          title: e.title,
+          subtitle: `${laTime(e.start)} · ${e.venue ?? e.neighborhood ?? ""}${e.going ? ` · ${e.going} going` : ""}`,
+          color: SOURCE_COLOR[e.source],
+          size: Math.min(34, 12 + Math.sqrt(e.going ?? 9) * 1.6),
+          url: e.url,
         });
-    }),
-  );
+    });
+  if (show.plan)
+    week?.days.forEach((d, di) =>
+      d.items.forEach((it) => {
+        if (typeof it.lat === "number" && typeof it.lng === "number")
+          points.push({
+            lat: it.lat,
+            lng: it.lng,
+            title: it.title,
+            subtitle: `Day ${di + 1} · ${it.start} · ${it.place}`,
+            color: KIND[it.kind]?.color ?? "#121212",
+            label: String(di + 1),
+          });
+      }),
+    );
+
+  const byDay = new Map<string, SFEvent[]>();
+  (events ?? []).forEach((e) => {
+    const k = new Date(e.start).toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric", timeZone: "America/Los_Angeles" });
+    byDay.set(k, [...(byDay.get(k) ?? []), e]);
+  });
+
   return (
     <section>
-      <Title sub="Every stop of your first week. The number is the day.">Your week on the map</Title>
-      {points.length ? (
-        <div className="ticket overflow-hidden p-1.5">
-          <PlanMap points={points} />
-        </div>
-      ) : (
-        <p className="text-sm text-ink/60">Plan your trip again to get the map (older plans don&apos;t have locations).</p>
-      )}
-      <div className="mt-3 flex flex-wrap gap-3 text-xs text-ink/70">
-        {Object.values(KIND).map((k) => (
-          <span key={k.label} className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full" style={{ background: k.color }} />
-            {k.label}
-          </span>
+      <Title sub="Your plan plus every tech event and party happening that week. Bigger bubble, bigger crowd.">
+        SF the week you land
+      </Title>
+      <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
+        {(["plan", "events"] as const).map((k) => (
+          <button
+            key={k}
+            onClick={() => setShow({ ...show, [k]: !show[k] })}
+            className={`rounded-full px-3 py-1.5 font-medium transition ${show[k] ? "bg-ink text-white" : "bg-black/5 text-ink/60"}`}
+          >
+            {k === "plan" ? "Your plan" : `Events${events ? ` (${events.length})` : ""}`}
+          </button>
         ))}
+        <span className="flex items-center gap-1.5 text-xs text-ink/60">
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: SOURCE_COLOR.Luma }} /> Luma
+          <span className="ml-2 h-2.5 w-2.5 rounded-full" style={{ background: SOURCE_COLOR.Partiful }} /> Partiful
+        </span>
+        <button
+          onClick={refreshLive}
+          disabled={state === "live"}
+          className="ml-auto flex items-center gap-1.5 rounded-full bg-black/5 px-3 py-1.5 text-ink/70 hover:text-ink disabled:opacity-60"
+        >
+          <RefreshCw className={`h-3.5 w-3.5 ${state === "live" ? "animate-spin" : ""}`} />
+          {state === "live" ? "Scraping Luma & Partiful…" : "Refresh live"}
+        </button>
       </div>
+      {state === "error" && <p className="mb-2 text-sm text-bridge-ink">Live refresh failed; showing the last snapshot.</p>}
+      <div className="ticket overflow-hidden p-1.5">
+        <PlanMap points={points} />
+      </div>
+
+      {events && events.length > 0 && (
+        <div className="mt-8 space-y-6">
+          {[...byDay.entries()].map(([day, list]) => (
+            <div key={day}>
+              <h3 className="mb-2 text-sm font-semibold text-ink/70">{day}</h3>
+              <ul className="ticket divide-y divide-black/5">
+                {list.map((e) => (
+                  <li key={e.url}>
+                    <a href={e.url} target="_blank" rel="noreferrer" className="flex items-center gap-3 px-4 py-3 hover:bg-black/[0.02]">
+                      <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: SOURCE_COLOR[e.source] }} />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate font-medium">{e.title}</span>
+                        <span className="block truncate text-xs text-ink/55">
+                          {laTime(e.start)} · {e.venue ?? e.neighborhood ?? "SF"}
+                        </span>
+                      </span>
+                      {e.going ? <span className="shrink-0 text-xs text-ink/50">{e.going} going</span> : null}
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-ink/40" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+      {events && events.length === 0 && <p className="mt-4 text-sm text-ink/60">No scraped events for these dates yet. Try Refresh live.</p>}
     </section>
   );
 }
@@ -398,6 +510,123 @@ function GuideView({ groups }: { groups: { title: string; tips: Tip[] }[] }) {
             )}
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+type Contact = {
+  id: string;
+  notionUrl: string;
+  name: string;
+  role: string;
+  company: string;
+  location: string;
+  inSF: boolean;
+  relationship: string | null;
+  lastContact: string | null;
+  nextStep: string;
+  linkedin: string | null;
+};
+
+const REL_COLOR: Record<string, string> = {
+  Strong: "bg-emerald-50 text-emerald-700",
+  Warm: "bg-sky-50 text-sky-700",
+  Light: "bg-black/5 text-ink/60",
+  Unknown: "bg-amber-50 text-amber-700",
+};
+
+// Asks the docked agent to plan an in-person 1:1 (Chat listens for this event).
+const askAgent = (text: string) => window.dispatchEvent(new CustomEvent("sfl:ask", { detail: text }));
+
+function NetworkView() {
+  const [data, setData] = useState<{ contacts?: Contact[]; error?: string } | null>(null);
+  const [all, setAll] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/crm")
+      .then(async (r) => setData(await r.json()))
+      .catch(() => setData({ error: "network" }));
+  }, []);
+
+  if (!data || data.error === "private") return null;
+  if (data.error)
+    return (
+      <section className="mb-10">
+        <Title sub="Connect your Notion CRM to see who you already know in SF.">Your network in SF</Title>
+        <p className="ticket p-4 text-sm text-ink/70">Notion isn&apos;t connected yet ({data.error}).</p>
+      </section>
+    );
+
+  const contacts = (data.contacts ?? []).filter((c) => all || c.inSF);
+  return (
+    <section className="mb-10">
+      <Title sub="From your Notion CRM. People you can actually see in person this week.">
+        Your network in SF
+      </Title>
+      <div className="mb-3 flex items-center gap-2 text-sm">
+        <button onClick={() => setAll(false)} className={`rounded-full px-3 py-1.5 font-medium ${!all ? "bg-ink text-white" : "bg-black/5 text-ink/60"}`}>
+          In SF ({(data.contacts ?? []).filter((c) => c.inSF).length})
+        </button>
+        <button onClick={() => setAll(true)} className={`rounded-full px-3 py-1.5 font-medium ${all ? "bg-ink text-white" : "bg-black/5 text-ink/60"}`}>
+          Everyone ({data.contacts?.length ?? 0})
+        </button>
+      </div>
+      <div className="ticket overflow-x-auto">
+        <table className="w-full min-w-[640px] text-left text-sm">
+          <thead className="text-xs text-ink/50">
+            <tr className="border-b border-black/5">
+              <th className="px-4 py-3 font-medium">Person</th>
+              <th className="px-4 py-3 font-medium">Relationship</th>
+              <th className="px-4 py-3 font-medium">Next step</th>
+              <th className="px-4 py-3" />
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-black/5">
+            {contacts.map((c) => (
+              <tr key={c.id} className="align-top">
+                <td className="px-4 py-3">
+                  <a href={c.notionUrl} target="_blank" rel="noreferrer" className="font-medium hover:underline">
+                    {c.name}
+                  </a>
+                  <p className="text-xs text-ink/55">{[c.role, c.company].filter(Boolean).join(" · ") || "—"}</p>
+                  <p className="text-xs text-ink/40">{c.location || "Location unknown"}</p>
+                </td>
+                <td className="px-4 py-3">
+                  {c.relationship && <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${REL_COLOR[c.relationship] ?? ""}`}>{c.relationship}</span>}
+                  {c.lastContact && <p className="mt-1 text-xs text-ink/45">Last: {c.lastContact}</p>}
+                </td>
+                <td className="max-w-[220px] px-4 py-3 text-ink/70">{c.nextStep || "—"}</td>
+                <td className="px-4 py-3">
+                  <div className="flex justify-end gap-2">
+                    {c.linkedin && (
+                      <a href={c.linkedin} target="_blank" rel="noreferrer" className="rounded-full bg-black/5 px-3 py-1.5 text-xs font-medium">
+                        LinkedIn
+                      </a>
+                    )}
+                    <button
+                      onClick={() =>
+                        askAgent(
+                          `Plan an in-person 1:1 with ${c.name}${c.role ? ` (${c.role}${c.company ? ` at ${c.company}` : ""})` : ""} during my first week. Our relationship is ${c.relationship ?? "unknown"}${c.nextStep ? ` and my next step is: ${c.nextStep}` : ""}. Suggest a good café near my plan, draft a short message I can send, and propose a calendar slot.`,
+                        )
+                      }
+                      className="whitespace-nowrap rounded-full bg-bridge px-3 py-1.5 text-xs font-medium text-white"
+                    >
+                      Plan a 1:1
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {contacts.length === 0 && (
+              <tr>
+                <td colSpan={4} className="px-4 py-6 text-center text-ink/55">
+                  Nobody in your CRM has an SF location yet. Switch to Everyone.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </section>
   );

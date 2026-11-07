@@ -100,6 +100,9 @@ export const transport: Tip[] = [
 ];
 
 export const workSpots: Tip[] = [
+  { name: "coworking sf (via LANS)", where: "1541 Polk St, Nob Hill", cost: "from $11/day", insight: "Cheapest real day pass in the city: fast Wi‑Fi, phone booths, unlimited coffee, open 5am–11:45pm, book in the LANS app.", tags: ["budget", "day pass"], source: { name: "LANS", url: "https://lans.app/spaces/california/san-francisco/coworking-sf/" } },
+  { name: "LANS day passes", cost: "$8–15/day", insight: "App with SF day passes: koho (Japantown), society of thumbs (Mission), dogpatch hub, trellis & decentered arts (SoMa), European Startup Embassy (South Park).", tags: ["budget", "day pass"], source: { name: "LANS", url: "https://lans.app/spaces/california/san-francisco/" } },
+  { name: "Industrious Union Square", where: "77 Geary St, 5th floor", insight: "Polished, professional coworking near Union Square: the move when you need a proper room for investor meetings.", tags: ["premium"], verify: true, source: { name: "Industrious", url: "https://www.industriousoffice.com/locations/77-geary-street-5th-floor" } },
   {
     name: "Salesforce Park",
     where: "Rooftop park over Salesforce Transit Center, SoMa",

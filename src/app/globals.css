@@ -89,3 +89,6 @@ body {
 }
 
 .sfl-tiles { filter: grayscale(0.85) brightness(1.06) contrast(0.92); }
+
+/* Tailwind preflight sets img{max-width:100%;height:auto}, which breaks Leaflet tiles */
+.leaflet-container img { max-width: none !important; max-height: none !important; height: auto; }
