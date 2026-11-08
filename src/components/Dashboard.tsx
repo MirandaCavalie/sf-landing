@@ -153,7 +153,7 @@ export default function Dashboard({
         </div>
       </main>
 
-      <Chat context={context} variant="docked" />
+      <Chat context={context} variant="docked" seed={{ profile, plan, key: `${profile.arrival}:${week?.tagline ?? ""}` }} />
     </div>
   );
 }
