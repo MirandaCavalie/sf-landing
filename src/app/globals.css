@@ -139,3 +139,18 @@ button:not(:disabled):active, a.rounded-full:active { transform: scale(.97); }
   [data-enter] > * { animation: none; }
   a.ticket:hover, button:active, a.rounded-full:active { transform: none; }
 }
+
+/* Landing hero: the intro scene, parked, with a slow ambient loop */
+.scene-still { transform-origin: 50% 100%; }
+.scene-idle { transform-box: fill-box; transform-origin: 50% 100%; animation: scene-breathe 4s ease-in-out infinite; }
+.scene-beam { animation: scene-beam 3.2s ease-in-out infinite; }
+.scene-fog { animation: scene-fog 9s ease-in-out infinite; }
+@keyframes scene-breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.5px); } }
+@keyframes scene-beam { 0%, 100% { opacity: .55; } 50% { opacity: .85; } }
+@keyframes scene-fog { 0%, 100% { transform: translateX(-12px); opacity: .9; } 50% { transform: translateX(12px); opacity: 1; } }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker-track { animation: ticker 60s linear infinite; }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .scene-idle, .scene-beam, .scene-fog, .ticker-track { animation: none; }
+}
