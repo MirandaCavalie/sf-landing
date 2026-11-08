@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Navigation } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 // Little animated scenes, one per way of getting around. Pure SVG + CSS keyframes (see globals.css .tg-*).
 
@@ -159,10 +159,11 @@ export default function TransportGuide() {
       >
         <span className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#e8f0fe]">
           <span className="absolute inset-0 animate-ping rounded-2xl bg-[#1a73e8]/15 [animation-duration:2.4s]" />
-          <Navigation className="relative h-6 w-6 text-[#1a73e8] transition group-hover:rotate-12" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icons/googlemaps.svg" alt="Google Maps" className="relative h-7 w-7 transition group-hover:scale-110" />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-lg font-semibold">🗺️ Just use Google Maps</span>
+          <span className="block text-lg font-semibold">Just use Google Maps</span>
           <span className="block text-sm text-ink/60">Live Muni, BART, Lime and walking times. One app, done.</span>
         </span>
         <ExternalLink className="h-5 w-5 shrink-0 text-ink/40" />
@@ -175,8 +176,18 @@ export default function TransportGuide() {
               <Art />
             </div>
             <div className="p-3">
-              <p className="font-semibold">
-                {emoji} {name}
+              <p className="flex items-center gap-1.5 font-semibold">
+                {name === "Uber / Lyft" ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/icons/uber.svg" alt="" className="h-4 w-4" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/icons/lyft.svg" alt="" className="h-4 w-4" />
+                  </>
+                ) : (
+                  <span>{emoji}</span>
+                )}
+                {name}
               </p>
               <p className="text-xs text-ink/60">{use}</p>
               <p className="mt-2 inline-block rounded-full bg-black/[0.04] px-2 py-0.5 text-xs font-medium">{cost}</p>

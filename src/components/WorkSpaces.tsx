@@ -38,7 +38,7 @@ export default function WorkSpaces() {
             <div className="relative aspect-[4/3] overflow-hidden bg-black/5">
               {s.image && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={s.image} alt={s.name} loading="lazy" className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                <img src={s.image} alt={s.name} loading="lazy" className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]" />
               )}
               {s.price && (
                 <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold shadow-sm">{s.price}</span>

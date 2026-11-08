@@ -26,7 +26,7 @@ export default function Onboarding({ name, onSubmit }: { name: string; onSubmit:
   const first = name.split(" ")[0] || "there";
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-10 sm:px-8">
+    <main data-enter className="mx-auto max-w-2xl px-4 py-10 sm:px-8">
       <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
         Hey {first}, <span className="text-bridge-ink">when do you land?</span>
       </h1>

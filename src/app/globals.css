@@ -122,3 +122,20 @@ body {
   .tg-roll, .tg-climb, .tg-zoom, .tg-wind, .tg-lines, .tg-blink, .tg-twinkle, .tg-road, .tg-spin-glow, .tg-bounce, .tg-route { animation: none; }
   .tg-zoom { transform: none; opacity: 1; }
 }
+
+/* Motion layer (taste-skill rules): linked cards lift 2px, photos zoom gently,
+   buttons press on click, the main block enters once on load. */
+a.ticket { transition: transform .2s ease, box-shadow .2s ease; }
+a.ticket:hover { transform: translateY(-2px); }
+button:not(:disabled), a.rounded-full { transition: transform .12s ease, filter .15s ease, background-color .15s ease, box-shadow .15s ease; }
+button:not(:disabled):active, a.rounded-full:active { transform: scale(.97); }
+@keyframes sfl-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+[data-enter] > * { animation: sfl-enter .7s cubic-bezier(.2,.7,.2,1) both; }
+[data-enter] > *:nth-child(2) { animation-delay: .08s; }
+[data-enter] > *:nth-child(3) { animation-delay: .16s; }
+[data-enter] > *:nth-child(4) { animation-delay: .24s; }
+[data-enter] > *:nth-child(n+5) { animation-delay: .32s; }
+@media (prefers-reduced-motion: reduce) {
+  [data-enter] > * { animation: none; }
+  a.ticket:hover, button:active, a.rounded-full:active { transform: none; }
+}
