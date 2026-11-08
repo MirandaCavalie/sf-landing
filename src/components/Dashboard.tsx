@@ -65,7 +65,7 @@ const GUIDE: Partial<Record<Tab, { title: string; tips: Tip[] }[]>> = {
 const KIND: Record<string, { label: string; color: string }> = {
   work: { label: "Work", color: "#1f3a5f" },
   coffee: { label: "Coffee chat", color: "#f04a23" },
-  event: { label: "Event", color: "#7c3aed" },
+  event: { label: "Event", color: "#d97706" },
   explore: { label: "Explore", color: "#0f9d76" },
   logistics: { label: "Logistics", color: "#8a8f98" },
 };
@@ -198,7 +198,7 @@ function Hero({ profile, week }: { profile: Profile; week?: Week }) {
   };
 
   return (
-    <section className="grid gap-3 lg:grid-cols-[1.4fr_1fr]">
+    <section data-enter className="grid gap-3 lg:grid-cols-[1.4fr_1fr]">
       <div className="ticket p-6">
         <p className="text-sm font-medium text-bridge-ink">{status}</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Your first week in SF</h1>
@@ -230,7 +230,7 @@ function Hero({ profile, week }: { profile: Profile; week?: Week }) {
               rel="noreferrer"
               className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium hover:bg-white/25"
             >
-              <MapPin className="h-3.5 w-3.5" /> Go
+              <MapPin className="h-3.5 w-3.5" /> Directions
             </a>
           </div>
         )}
@@ -398,7 +398,7 @@ type SFEvent = {
   going: number | null;
 };
 
-const SOURCE_COLOR = { Luma: "#7c3aed", Partiful: "#e11d74" } as const;
+const SOURCE_COLOR = { Luma: "#0ea5e9", Partiful: "#e11d74" } as const;
 
 const laTime = (iso: string) =>
   new Date(iso).toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", timeZone: "America/Los_Angeles" });
@@ -489,7 +489,7 @@ function MapView({ plan }: { plan: Plan }) {
           className="ml-auto flex items-center gap-1.5 rounded-full bg-black/5 px-3 py-1.5 text-ink/70 hover:text-ink disabled:opacity-60"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${state === "live" ? "animate-spin" : ""}`} />
-          {state === "live" ? "Scraping Luma & Partiful…" : "Refresh live"}
+          {state === "live" ? "Scraping Luma & Partiful…" : "Refresh events"}
         </button>
       </div>
       {state === "error" && <p className="mb-2 text-sm text-bridge-ink">Live refresh failed; showing the last snapshot.</p>}
@@ -659,7 +659,12 @@ function NetworkView() {
   const contacts = (data.contacts ?? []).filter((c) => all || c.inSF);
   return (
     <section className="mb-10">
-      <Title sub="From your Notion CRM.">Your people in SF</Title>
+      <Title sub="From your Notion CRM.">
+        <span className="inline-flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icons/notion.svg" alt="" className="h-5 w-5" /> Your people in SF
+        </span>
+      </Title>
       <div className="mb-3 flex items-center gap-2 text-sm">
         <button onClick={() => setAll(false)} className={`rounded-full px-3 py-1.5 font-medium ${!all ? "bg-ink text-white" : "bg-black/5 text-ink/60"}`}>
           In SF ({(data.contacts ?? []).filter((c) => c.inSF).length})
@@ -752,7 +757,7 @@ function PeopleView({ o }: { o: Outreach }) {
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-ink px-3 py-2 font-medium text-white"
               >
                 {copied === t.dm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                {copied === t.dm ? "Copied" : "Copy"}
+                {copied === t.dm ? "Copied" : "Copy message"}
               </button>
               <a
                 target="_blank"
@@ -760,7 +765,7 @@ function PeopleView({ o }: { o: Outreach }) {
                 href={`https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(t.linkedin_search)}`}
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-black/5 px-3 py-2 font-medium"
               >
-                LinkedIn <ExternalLink className="h-3.5 w-3.5" />
+                Find on LinkedIn <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>
           </article>
@@ -775,7 +780,8 @@ function PeopleView({ o }: { o: Outreach }) {
           href={`https://x.com/intent/post?text=${encodeURIComponent(o.x_post)}`}
           className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-sm font-medium text-white"
         >
-          Post on X <ExternalLink className="h-3.5 w-3.5" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icons/x.svg" alt="" className="h-3.5 w-3.5 invert" /> Post on X
         </a>
       </div>
     </section>

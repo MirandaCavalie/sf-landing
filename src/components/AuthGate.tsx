@@ -11,7 +11,7 @@ export default function AuthGate() {
         <Wordmark />
       </header>
       <section className="grid flex-1 items-center gap-10 pb-16 md:grid-cols-[1.1fr_1fr]">
-        <div>
+        <div data-enter>
           <h1 className="font-display text-6xl uppercase leading-[0.9] sm:text-8xl">
             Land like
             <br />
