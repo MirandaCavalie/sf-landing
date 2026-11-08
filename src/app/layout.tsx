@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Anton, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const display = Anton({ variable: "--font-display", weight: "400", subsets: ["latin"] });
 const sans = Inter({ variable: "--font-sans", subsets: ["latin"] });
 const mono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin"] });
-const serif = Instrument_Serif({ variable: "--font-serif", weight: "400", style: ["normal", "italic"], subsets: ["latin"] });
 
 const title = "SF Landing — land like a local";
 const description = "A crew of AI agents that lands you in San Francisco with the insider tips nobody tells you.";
@@ -22,7 +21,7 @@ export const viewport: Viewport = { themeColor: "#f04a23" };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${display.variable} ${sans.variable} ${mono.variable} ${serif.variable} antialiased`}>{children}</body>
+      <body className={`${display.variable} ${sans.variable} ${mono.variable} antialiased`}>{children}</body>
     </html>
   );
 }
