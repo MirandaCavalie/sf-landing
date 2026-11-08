@@ -1,0 +1,112 @@
+[
+ {
+  "name": "the love potion library",
+  "address": "284 Noe St",
+  "price": "$8/day",
+  "url": "https://lans.app/spaces/california/san-francisco/the-love-potion-library/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/492/covers/cover_492_20261024_183127_fc953f.webp",
+  "description": "Book a day pass at the love potion library, coworking space in San Francisco. Instant\n    booking in the LANS app. 284 Noe St.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ },
+ {
+  "name": "society of thumbs",
+  "address": "1398 Valencia Street",
+  "price": "$14/day",
+  "url": "https://lans.app/spaces/california/san-francisco/society-of-thumbs/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/487/covers/cover_487_20261013_191544_9e6c0d.webp",
+  "description": "Book a day pass at society of thumbs, coworking space in San Francisco. Instant\n    booking in the LANS app. 1398 Valencia Street.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ },
+ {
+  "name": "coworking sf",
+  "address": "1541 Polk St",
+  "price": "$15/day",
+  "url": "https://lans.app/spaces/california/san-francisco/coworking-sf/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/2/covers/cover_2_20260827_214622_e12e1d.webp",
+  "description": "Book a day pass at coworking sf, coworking space in San Francisco. Instant\n    booking in the LANS app. 1541 Polk St.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ },
+ {
+  "name": "decentered arts",
+  "address": "1175 Folsom St",
+  "price": "$15/day",
+  "url": "https://lans.app/spaces/california/san-francisco/decentered-arts-coworking/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/336/covers/cover_336_20260827_202407_9ace81.webp",
+  "description": "Book a day pass at decentered arts, coworking space in San Francisco. Instant\n    booking in the LANS app. 1175 Folsom St.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ },
+ {
+  "name": "dogpatch hub",
+  "address": "1278 Minnesota St",
+  "price": "$15/day",
+  "url": "https://lans.app/spaces/california/san-francisco/dogpatch-hub/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/453/covers/cover_453_20260827_202843_912053.webp",
+  "description": "Book a day pass at dogpatch hub, coworking space in San Francisco. Instant\n    booking in the LANS app. 1278 Minnesota St.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ },
+ {
+  "name": "european startup embassy",
+  "address": "461 Bryant St,",
+  "price": "$19/day",
+  "url": "https://lans.app/spaces/california/san-francisco/european-startup-embassy/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/484/covers/cover_484_20260827_202939_ba0088.webp",
+  "description": "Book a day pass at european startup embassy, coworking space in San Francisco. Instant\n    booking in the LANS app. 461 Bryant St,.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ },
+ {
+  "name": "hippo campus",
+  "address": "1050 Sansome St, Suite 200",
+  "price": "$20/day",
+  "url": "https://lans.app/spaces/california/san-francisco/hippo-campus/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/491/covers/cover_491_20261019_010859_ef1627.webp",
+  "description": "Book a day pass at hippo campus, coworking space in San Francisco. Instant\n    booking in the LANS app. 1050 Sansome St, Suite 200.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ },
+ {
+  "name": "koho sf",
+  "address": "1675 Post St, East Mall",
+  "price": "$20/day",
+  "url": "https://lans.app/spaces/california/san-francisco/koho-sf/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/100/covers/cover_100_20260827_202015_2071ff.webp",
+  "description": "Book a day pass at koho sf, coworking space in San Francisco. Instant\n    booking in the LANS app. 1675 Post St, East Mall.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ },
+ {
+  "name": "tillage",
+  "address": "1410 Irving St",
+  "price": "$21/day",
+  "url": "https://lans.app/spaces/california/san-francisco/tillage/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/475/covers/cover_475_20261105_005138_216d61.webp",
+  "description": "Book a day pass at tillage, coworking space in San Francisco. Instant\n    booking in the LANS app. 1410 Irving St.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ },
+ {
+  "name": "Trellis",
+  "address": "981 Mission St",
+  "price": "$25/day",
+  "url": "https://lans.app/spaces/california/san-francisco/trellis/",
+  "image": "https://lansapps3.s3.amazonaws.com/v4/spaces/101/covers/cover_101_20260827_214853_5603ed.webp",
+  "description": "Book a day pass at Trellis, coworking space in San Francisco. Instant\n    booking in the LANS app. 981 Mission St.",
+  "neighborhood": "San Francisco",
+  "rating": null,
+  "reviews": null
+ }
+]

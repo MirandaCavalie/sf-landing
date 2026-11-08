@@ -88,7 +88,10 @@ body {
   .ticket, .ticket:hover { transition: none; transform: none; }
 }
 
-.sfl-tiles { filter: grayscale(0.85) brightness(1.06) contrast(0.92); }
-
-/* Tailwind preflight sets img{max-width:100%;height:auto}, which breaks Leaflet tiles */
-.leaflet-container img { max-width: none !important; max-height: none !important; height: auto; }
+/* MapLibre popup + controls, matched to the brand */
+.maplibregl-popup-content { font-family: inherit; border-radius: 14px; padding: 12px 14px; box-shadow: 0 8px 28px rgba(0,0,0,.18); color: #1a1a1a; font-size: 13px; line-height: 1.4; }
+.maplibregl-popup-content a { color: #f04a23; font-weight: 600; text-decoration: none; }
+.maplibregl-popup-close-button { font-size: 16px; padding: 2px 8px; color: #888; }
+.maplibregl-ctrl-group { border-radius: 12px !important; box-shadow: 0 2px 10px rgba(0,0,0,.12) !important; }
+.sfl-bubble { transition: transform .15s; }
+.sfl-bubble:hover { transform: scale(1.12); }
