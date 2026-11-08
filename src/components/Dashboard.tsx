@@ -21,6 +21,7 @@ import { signOut } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import Chat from "@/components/Chat";
+import StaySpaces from "@/components/StaySpaces";
 import TransportGuide from "@/components/TransportGuide";
 import WorkSpaces from "@/components/WorkSpaces";
 import { LogoMark } from "@/components/brand/Logo";
@@ -142,6 +143,7 @@ export default function Dashboard({
           )}
           {isSection && (
             <>
+              {tab === "basecamp" && <StaySpaces />}
               {tab === "work" && <WorkSpaces />}
               {tab === "moving" && <TransportGuide />}
               {plan[tab] ? <SectionView s={plan[tab] as Section} /> : <Missing />}
