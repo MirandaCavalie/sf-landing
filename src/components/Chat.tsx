@@ -20,10 +20,20 @@ const STARTERS = [
   "Cheapest place to work?",
 ];
 
-export default function Chat({ context, variant = "floating" }: { context: string; variant?: "floating" | "docked" }) {
+export default function Chat({
+  context,
+  variant = "floating",
+  seed,
+}: {
+  context: string;
+  variant?: "floating" | "docked";
+  seed?: { profile: unknown; plan: unknown; key: string };
+}) {
   const docked = variant === "docked";
   const [open, setOpen] = useState(false);
   const [turns, setTurns] = useState<Turn[]>([]);
+  const instincts = useInstincts(seed);
+  const [acted, setActed] = useState<number[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [conn, setConn] = useState<Connected>({ google: false, linkedin: false });
@@ -129,10 +139,57 @@ export default function Chat({ context, variant = "floating" }: { context: strin
 
           {/* Transcript */}
           <div className="flex-1 space-y-3 overflow-y-auto p-4">
+            {seed && (
+              <div>
+                <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-ink/55">
+                  <span className="relative flex h-2 w-2">
+                    {instincts === null && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-bridge/60" />}
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-bridge" />
+                  </span>
+                  {instincts === null ? "Looking at your week…" : "Noticed for you"}
+                </p>
+                {instincts === null ? (
+                  <div className="space-y-2">
+                    {[0, 1, 2].map((i) => (
+                      <div key={i} className="h-16 animate-pulse rounded-2xl bg-black/[0.04]" />
+                    ))}
+                  </div>
+                ) : (
+                  <ul className="space-y-2">
+                    {instincts.map((n, i) => (
+                      <li
+                        key={i}
+                        className={`rounded-2xl border p-3 text-sm transition ${
+                          acted.includes(i) ? "border-black/5 bg-black/[0.02] opacity-60" : "border-bridge/15 bg-[#fff8f4]"
+                        }`}
+                      >
+                        <div className="flex gap-2.5">
+                          <span className="text-lg leading-none">{n.emoji}</span>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium leading-snug">{n.title}</p>
+                            <p className="mt-0.5 text-xs text-ink/60">{n.detail}</p>
+                          </div>
+                        </div>
+                        <button
+                          disabled={busy || acted.includes(i)}
+                          onClick={() => {
+                            setActed((a) => [...a, i]);
+                            send(n.prompt);
+                          }}
+                          className="mt-2 ml-7 rounded-full bg-ink px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50"
+                        >
+                          {acted.includes(i) ? "On it ✓" : `${n.action} →`}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
             {turns.length === 0 && (
               <div>
                 <p className="text-sm text-ink/70">
-                  {conn.name ? `Hey ${conn.name.split(" ")[0]}! ` : ""}Ask me anything about SF. Try:
+                  {conn.name ? `Hey ${conn.name.split(" ")[0]}! ` : ""}Or ask me anything about SF:
                 </p>
                 <div className="mt-3 flex flex-col gap-2">
                   {STARTERS.map((s) => (
@@ -388,4 +445,40 @@ function CoffeeCard({ a, google }: { a: Extract<Action, { kind: "coffee_invite" 
       {cal?.startsWith("error:") && <p className="mt-1 text-xs text-bridge-ink">{cal.slice(6)}</p>}
     </div>
   );
+}
+
+type Instinct = { emoji: string; title: string; detail: string; action: string; prompt: string };
+
+// The agent looks at the plan + real signals on its own (events, weather, network, free windows).
+// Cached per plan in the browser so it doesn't re-run on every page load.
+function useInstincts(seed?: { profile: unknown; plan: unknown; key: string }) {
+  const [items, setItems] = useState<Instinct[] | null>(null);
+  useEffect(() => {
+    if (!seed) return;
+    const cacheKey = `sfl:instincts:${seed.key}`;
+    try {
+      const hit = localStorage.getItem(cacheKey);
+      if (hit) {
+        setItems(JSON.parse(hit));
+        return;
+      }
+    } catch {}
+    let alive = true;
+    fetch("/api/instincts", { method: "POST", body: JSON.stringify({ profile: seed.profile, plan: seed.plan }) })
+      .then((r) => r.json())
+      .then((d) => {
+        if (!alive) return;
+        const list = (d.instincts ?? []) as Instinct[];
+        setItems(list);
+        try {
+          if (list.length) localStorage.setItem(cacheKey, JSON.stringify(list));
+        } catch {}
+      })
+      .catch(() => alive && setItems([]));
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seed?.key]);
+  return items;
 }
