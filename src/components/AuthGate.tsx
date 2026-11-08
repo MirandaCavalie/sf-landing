@@ -43,6 +43,8 @@ export default function AuthGate() {
       <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-[#121b2e] text-white">
         <SFScene animate={false} />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#121b2e]/85 via-[#121b2e]/35 to-transparent" />
+        {/* Blend the flat water bands at the bottom into the night so the ticker floats on it */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-[#121b2e] via-[#121b2e]/70 to-transparent" />
 
         <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 sm:px-8">
           <span className="flex items-center gap-2">
@@ -57,10 +59,10 @@ export default function AuthGate() {
         </header>
 
         <div data-enter className="relative z-10 mx-auto w-full max-w-6xl flex-1 px-4 pt-[6vh] sm:px-8">
-          <h1 className="max-w-3xl font-display text-[clamp(52px,9vw,112px)] uppercase leading-[0.9] tracking-wide [text-shadow:0_6px_30px_rgba(18,18,18,.35)]">
+          <h1 className="max-w-3xl text-[clamp(48px,7.5vw,96px)] font-medium leading-[0.95] tracking-[-0.035em] [text-shadow:0_4px_24px_rgba(18,18,18,.3)]">
             Land in SF
             <br />
-            like <span className="text-bridge">a local.</span>
+            <span className="font-serif text-[1.08em] font-normal italic tracking-[-0.01em] text-[#ff8a5c]">like a local.</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-white/85">
             Tell us when you land. Agents plan your first week: where to sleep, where to work, who to meet over coffee and
@@ -78,24 +80,22 @@ export default function AuthGate() {
               See a sample plan <ArrowRight className="h-4 w-4" />
             </a>
           </div>
-          <ul className="mt-8 flex flex-wrap gap-2">
-            {facts.map((f) => (
-              <li key={f} className="rounded-full border border-white/15 bg-[#121b2e]/65 px-3.5 py-1.5 text-sm backdrop-blur-md">
+          <p className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/70">
+            {facts.map((f, i) => (
+              <span key={f} className="flex items-center gap-3">
+                {i > 0 && <span className="h-1 w-1 rounded-full bg-white/40" />}
                 {f}
-              </li>
+              </span>
             ))}
-          </ul>
+          </p>
         </div>
 
         {/* Live strip of real events (Luma + Partiful), duplicated for a seamless loop */}
-        <div className="ticker relative z-10 overflow-hidden border-t border-white/10 bg-[#121b2e]/55 py-3 backdrop-blur-md">
-          <div className="ticker-track flex w-max gap-8 whitespace-nowrap text-sm text-white/80">
+        <div className="ticker relative z-10 overflow-hidden py-5 [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
+          <div className="ticker-track flex w-max items-center gap-6 whitespace-nowrap text-[13px] tracking-wide text-white/55">
             {[...ticker, ...ticker].map((e, i) => (
-              <a key={i} href={e.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white">
-                <span className={`h-1.5 w-1.5 rounded-full ${e.source === "Luma" ? "bg-sky-400" : "bg-pink-400"}`} />
-                <span className="text-white/50">
-                  {new Date(e.start).toLocaleDateString("en-US", { weekday: "short", timeZone: "America/Los_Angeles" })}
-                </span>
+              <a key={i} href={e.url} target="_blank" rel="noreferrer" className="flex items-center gap-6 transition hover:text-white">
+                <span className="h-px w-6 bg-white/25" />
                 {e.title}
               </a>
             ))}
