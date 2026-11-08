@@ -32,9 +32,9 @@ export default function AuthGate() {
   const deskPhoto = spaces.find((s) => s.image)?.image;
 
   const facts = [
-    `${weekEvents} tech events this week`,
-    `Hostels from $${cheapestStay}/night`,
-    `Day passes from $${cheapestDesk}`,
+    { value: `${weekEvents}`, label: "tech events this week" },
+    { value: `$${cheapestStay}`, label: "hostels per night" },
+    { value: `$${cheapestDesk}`, label: "coworking day pass" },
   ];
 
   return (
@@ -80,11 +80,14 @@ export default function AuthGate() {
               See a sample plan <ArrowRight className="h-4 w-4" />
             </a>
           </div>
-          <p className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/70">
+          {/* One frosted bar so the facts stay readable over any part of the scene (deck, towers, sky) */}
+          <p className="mt-8 inline-flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-2xl border border-white/10 bg-[#121b2e]/70 px-4 py-2.5 text-sm text-white/80 shadow-lg backdrop-blur-md">
             {facts.map((f, i) => (
-              <span key={f} className="flex items-center gap-3">
-                {i > 0 && <span className="h-1 w-1 rounded-full bg-white/40" />}
-                {f}
+              <span key={f.label} className="flex items-center gap-4">
+                {i > 0 && <span className="h-3.5 w-px bg-white/20" />}
+                <span>
+                  <strong className="font-semibold text-white">{f.value}</strong> {f.label}
+                </span>
               </span>
             ))}
           </p>
