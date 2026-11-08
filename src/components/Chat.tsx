@@ -15,7 +15,7 @@ type Connected = { google: boolean; linkedin: boolean; name?: string; image?: st
 
 const STARTERS = [
   "Best events the week I land?",
-  "Find me a coffee for Day 2",
+  "Get me 1:1 coffees with my SF network",
   "Is my area safe at night?",
   "Cheapest place to work?",
 ];
@@ -187,7 +187,7 @@ function Connector({ label, on, onClick }: { label: string; on: boolean; onClick
 function TurnView({ t, google }: { t: Turn; google: boolean }) {
   if (t.role === "user")
     return <p className="ml-auto max-w-[85%] rounded-2xl rounded-br-md bg-ink px-3.5 py-2 text-sm text-white">{t.text}</p>;
-  if (t.role === "assistant") return <p className="max-w-[95%] whitespace-pre-wrap text-sm leading-relaxed">{t.text}</p>;
+  if (t.role === "assistant") return <Markdown text={t.text} />;
   if (t.role === "tool") return <p className="text-xs text-ink/45">↳ {t.label}</p>;
   if (t.role === "error") return <p className="text-xs text-bridge-ink">⚠ {t.text}</p>;
   return <ActionCard a={t.action} google={google} />;
@@ -231,6 +231,8 @@ function ActionCard({ a, google }: { a: Action; google: boolean }) {
         </a>
       </div>
     );
+
+  if (a.kind === "coffee_invite") return <CoffeeCard a={a} google={google} />;
 
   const when = new Date(a.start).toLocaleString("en-US", {
     weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/Los_Angeles",
@@ -286,4 +288,104 @@ function downloadIcs(a: Extract<Action, { kind: "calendar" }>) {
   link.download = `${a.title.replace(/\W+/g, "-")}.ics`;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+// Bold (**x**) and "- " bullets are all the agent uses; render them without a markdown dependency.
+function inline(line: string) {
+  return line.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? <strong key={i}>{part.slice(2, -2)}</strong> : <span key={i}>{part}</span>,
+  );
+}
+
+function Markdown({ text }: { text: string }) {
+  const blocks = text.trim().split(/\n{2,}/);
+  return (
+    <div className="max-w-[95%] space-y-2 text-sm leading-relaxed">
+      {blocks.map((b, i) => {
+        const lines = b.split("\n");
+        if (lines.every((l) => /^\s*[-*•]\s+/.test(l)))
+          return (
+            <ul key={i} className="list-disc space-y-1 pl-5">
+              {lines.map((l, j) => (
+                <li key={j}>{inline(l.replace(/^\s*[-*•]\s+/, ""))}</li>
+              ))}
+            </ul>
+          );
+        return (
+          <p key={i}>
+            {lines.map((l, j) => (
+              <span key={j}>
+                {j > 0 && <br />}
+                {inline(l)}
+              </span>
+            ))}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
+function CoffeeCard({ a, google }: { a: Extract<Action, { kind: "coffee_invite" }>; google: boolean }) {
+  const [copied, setCopied] = useState(false);
+  const [cal, setCal] = useState<string | null>(null);
+  const when = new Date(a.start).toLocaleString("en-US", {
+    weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/Los_Angeles",
+  });
+  const event = { kind: "calendar" as const, title: `☕ Coffee with ${a.person}`, start: a.start, end: a.end, location: a.cafe, description: a.message };
+  async function addGoogle() {
+    setCal("adding");
+    const r = await fetch("/api/calendar", { method: "POST", body: JSON.stringify(event) });
+    const j = await r.json();
+    setCal(r.ok ? `added:${j.link}` : `error:${j.error}`);
+  }
+  const pill = "inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium";
+  return (
+    <div className="rounded-2xl border border-black/5 bg-white p-3.5 text-sm shadow-sm">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="font-semibold">☕ {a.person}</p>
+          <p className="text-xs text-ink/55">{a.why}</p>
+        </div>
+        <span className="shrink-0 rounded-full bg-[#fff4ef] px-2 py-0.5 text-[11px] font-medium text-bridge-ink">1:1</span>
+      </div>
+      <p className="mt-2 text-xs text-ink/60">
+        {when} · {a.cafe}
+      </p>
+      <p className="mt-2 whitespace-pre-wrap rounded-xl bg-[#f6f4f0] p-2.5 text-[13px]">{a.message}</p>
+      <div className="mt-2.5 flex flex-wrap gap-1.5">
+        <button
+          className={`${pill} bg-ink text-white`}
+          onClick={() => {
+            navigator.clipboard.writeText(a.message);
+            setCopied(true);
+          }}
+        >
+          {copied ? "Copied ✓" : "1 · Copy message"}
+        </button>
+        <a
+          className={`${pill} bg-[#0a66c2] text-white`}
+          target="_blank"
+          rel="noreferrer"
+          href={a.linkedin_url ?? `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(a.person)}`}
+        >
+          2 · Open LinkedIn ↗
+        </a>
+        {cal?.startsWith("added:") ? (
+          <a className={`${pill} bg-emerald-50 text-emerald-700`} target="_blank" rel="noreferrer" href={cal.slice(6)}>
+            On your calendar ✓
+          </a>
+        ) : google ? (
+          <button className={`${pill} bg-bridge text-white`} onClick={addGoogle} disabled={cal === "adding"}>
+            {cal === "adding" ? "Adding…" : "3 · Add to calendar"}
+          </button>
+        ) : (
+          <button className={`${pill} bg-bridge text-white`} onClick={() => downloadIcs(event)}>
+            3 · Add to calendar (.ics)
+          </button>
+        )}
+      </div>
+      {cal?.startsWith("error:") && <p className="mt-1 text-xs text-bridge-ink">{cal.slice(6)}</p>}
+    </div>
+  );
 }
