@@ -11,7 +11,8 @@ const VIBES = ["Parties", "Quiet cafés", "Hackathons", "Outdoors", "Latino comm
 function nextMonday() {
   const d = new Date();
   d.setDate(d.getDate() + ((8 - d.getDay()) % 7 || 7));
-  return d.toISOString().slice(0, 10);
+  // Local date, not toISOString(): after 4pm in SF, UTC is already tomorrow.
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 export default function Onboarding({ name, onSubmit }: { name: string; onSubmit: (p: Profile) => void }) {
