@@ -2,6 +2,7 @@
 
 import { ExternalLink, MapPin, Star, TriangleAlert } from "lucide-react";
 import { useState } from "react";
+import Pager, { PAGE_SIZE } from "@/components/ui/Pager";
 import stays from "@/data/stays.json";
 
 type Stay = {
@@ -30,6 +31,7 @@ const MORE = [
 
 export default function StaySpaces() {
   const [filter, setFilter] = useState<Filter>("All");
+  const [page, setPage] = useState(0);
   const list = (stays as Stay[]).filter((s) =>
     filter === "All" ? true : filter === "Hostels" ? s.kind === "Hostel" : filter === "Hotels" ? s.kind === "Hotel" : s.neighborhood === "Nob Hill",
   );
@@ -46,7 +48,10 @@ export default function StaySpaces() {
         {FILTERS.map((f) => (
           <button
             key={f}
-            onClick={() => setFilter(f)}
+            onClick={() => {
+              setFilter(f);
+              setPage(0);
+            }}
             className={`rounded-full px-3 py-1.5 font-medium ${filter === f ? "bg-ink text-white" : "bg-black/5 text-ink/60 hover:text-ink"}`}
           >
             {f}
@@ -54,9 +59,9 @@ export default function StaySpaces() {
         ))}
       </div>
 
-      <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3">
-        {list.map((s) => (
-          <a key={s.url} href={s.url} target="_blank" rel="noreferrer" className="ticket group w-64 shrink-0 snap-start overflow-hidden sm:w-auto">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {list.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map((s) => (
+          <a key={s.url} href={s.url} target="_blank" rel="noreferrer" className="ticket group overflow-hidden">
             <div className="relative aspect-[4/3] overflow-hidden bg-black/5">
               {s.image && (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -101,6 +106,8 @@ export default function StaySpaces() {
           </a>
         ))}
       </div>
+
+      <Pager page={page} total={list.length} onChange={setPage} />
 
       <h2 className="mb-3 mt-10 text-xl font-semibold tracking-tight">Staying a month or more</h2>
       <ul className="ticket divide-y divide-black/5">
