@@ -54,7 +54,7 @@ export type Outreach = z.infer<typeof OutreachSchema>;
 
 export const WeekSchema = z.object({
   tagline: z.string().describe("Their week in max 7 words"),
-  secrets: z.array(z.string()).describe("Exactly 3 local secrets, max 9 words each"),
+  secrets: z.array(z.string()).describe("Exactly 3 to-dos before landing, imperative and specific, max 8 words each (e.g. 'Apply to AngelList Founders Café')"),
   days: z
     .array(
       z.object({
@@ -159,7 +159,7 @@ export function runSpecialist(id: AgentId, p: Profile) {
 export function runCoordinator(p: Profile, results: Record<string, unknown>): Promise<Week> {
   const content = `ROLE: Coordinator. Turn your teammates' findings into this person's first 7 days in SF, starting on ${p.arrival} (Day 1 = arrival; keep Day 1 light: land, check in, one easy thing).
 Each item is one concrete, scheduled action at a specific place from the findings. Across the week include at least 3 coffee chats (with the person-types from 'Who to meet'), 2-3 events/communities, focused work blocks at the recommended spots, and one fun SF experience matching their vibe. Realistic times, no overlaps, travel time in mind.
-Then the top 3 secrets.
+Then the 3 most useful to-dos before they land (secrets field).
 
 TEAM FINDINGS:
 ${JSON.stringify(results)}
