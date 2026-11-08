@@ -62,7 +62,7 @@ export default function AuthGate() {
           <h1 className="max-w-3xl text-[clamp(48px,7.5vw,96px)] font-medium leading-[0.95] tracking-[-0.035em] [text-shadow:0_4px_24px_rgba(18,18,18,.3)]">
             Land in SF
             <br />
-            <span className="font-serif text-[1.08em] font-normal italic tracking-[-0.01em] text-[#ff8a5c]">like a local.</span>
+            <span className="text-[#ff8a5c]">like a local.</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-white/85">
             Tell us when you land. Agents plan your first week: where to sleep, where to work, who to meet over coffee and
