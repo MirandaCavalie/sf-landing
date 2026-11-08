@@ -1,6 +1,8 @@
 "use client";
 
 import { ExternalLink, MapPin } from "lucide-react";
+import { useState } from "react";
+import Pager, { PAGE_SIZE } from "@/components/ui/Pager";
 import spaces from "@/data/lans-spaces.json";
 
 type Space = { name: string; address: string | null; price: string | null; url: string; image: string | null };
@@ -18,6 +20,7 @@ const title = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase());
 
 export default function WorkSpaces() {
   const list = spaces as Space[];
+  const [page, setPage] = useState(0);
   return (
     <section className="mb-10">
       <div className="mb-4 flex items-end justify-between gap-3">
@@ -26,14 +29,14 @@ export default function WorkSpaces() {
           via LANS ↗
         </a>
       </div>
-      <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3">
-        {list.map((s) => (
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {list.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map((s) => (
           <a
             key={s.url}
             href={s.url}
             target="_blank"
             rel="noreferrer"
-            className="ticket group w-64 shrink-0 snap-start overflow-hidden sm:w-auto"
+            className="ticket group overflow-hidden"
           >
             <div className="relative aspect-[4/3] overflow-hidden bg-black/5">
               {s.image && (
@@ -58,6 +61,8 @@ export default function WorkSpaces() {
           </a>
         ))}
       </div>
+
+      <Pager page={page} total={list.length} onChange={setPage} />
 
       <h2 className="mb-3 mt-10 text-xl font-semibold tracking-tight">Free & other spots</h2>
       <ul className="ticket divide-y divide-black/5">
